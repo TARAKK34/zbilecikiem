@@ -1,4 +1,5 @@
-const { getStore } = require("@netlify/blobs");
+// Prosta pamięć podręczna na serwerze dla zużytych kodów
+const usedCodes = new Set();
 
 const VALID_CODES = [
   "0UN2QFEJR", "15JTZKFYX", "2AKKICOSS", "2MAWZEKRE", "3Z2BOXRS6",
@@ -25,16 +26,14 @@ const VALID_CODES = [
 
 exports.handler = async function(event, context) {
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method not allowed" })
-    };
+    return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed" }) };
   }
 
   try {
     const body = JSON.parse(event.body || "{}");
     const cleanCode = body.code ? body.code.trim().toUpperCase() : "";
 
+    // 1. Sprawdź, czy kod jest na liście
     if (!VALID_CODES.includes(cleanCode)) {
       return {
         statusCode: 400,
@@ -43,10 +42,8 @@ exports.handler = async function(event, context) {
       };
     }
 
-    const store = getStore("activation-codes");
-    const codeStatus = await store.get(cleanCode, { type: "json" });
-
-    if (codeStatus && codeStatus.used) {
+    // 2. Sprawdź, czy kod został już użyty w tej sesji serwera
+    if (usedCodes.has(cleanCode)) {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
@@ -54,10 +51,8 @@ exports.handler = async function(event, context) {
       };
     }
 
-    await store.setJSON(cleanCode, {
-      used: true,
-      usedAt: new Date().toISOString()
-    });
+    // 3. Oznacz kod jako zużyty
+    usedCodes.add(cleanCode);
 
     return {
       statusCode: 200,
@@ -69,7 +64,7 @@ exports.handler = async function(event, context) {
     return {
       statusCode: 500,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ success: false, message: "Błąd serwera: " + error.message })
+      body: JSON.stringify({ success: false, message: "Błąd serwera." })
     };
   }
 };
