@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pl" class="h-full bg-[#151422]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#151422">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="zBiletem">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <title>zbiletem.pl - Radom</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts - Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #151422;
+      color: #ffffff;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+    }
+
+    /* Dopasowanie do stref bezpieczeństwa ekranu bezramkowego (iPhone/Android) */
+    .safe-padding-top {
+      padding-top: max(1.25rem, env(safe-area-inset-top));
+    }
+    .safe-padding-bottom {
+      padding-bottom: max(5.5rem, calc(4.5rem + env(safe-area-inset-bottom)));
+    }
+    .safe-margin-bottom {
+      margin-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* Tło aplikacji */
+    .app-bg {
+      background: radial-gradient(circle at top, #232236 0%, #151422 100%);
+    }
+
+    /* Karta biletu z zaokrągleniami */
+    .ticket-card {
+      background-color: #555566;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    .ticket-price-box {
+      background-color: #273048;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    /* Dolny arkusz (Bottom Sheet) */
+    .bottom-sheet {
+      background-color: #1c1b29;
+      border-top-left-radius: 28px;
+      border-top-right-radius: 28px;
+      padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    }
+
+    /* Ukrywanie paska przewijania */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Przesuwający się tekst MZDiK Radom */
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: 200%;
+      animation: marquee 12s linear infinite;
+    }
+
+    /* Styl Przycisków */
+    .btn-gold {
+      background-color: #ebaa42;
+      color: #121212;
+      font-weight: 600;
+    }
+    .btn-gold:active {
+      background-color: #d89932;
+    }
+  </style>
+</head>
+<body class="w-full h-full app-bg flex flex-col justify-between overflow-hidden">
+
+  <!-- GŁÓWNY KONTENER APLIKACJI (Pełny ekran mobilny) -->
+  <div class="w-full h-full flex flex-col justify-between relative overflow-hidden">
+
+    <!-- EKRAN 0: Aktywacja / Pierwsze Logowanie -->
+    <div id="screen-auth" class="flex-1 flex flex-col justify-center items-center px-6 safe-padding-top safe-padding-bottom text-center">
+      <div class="w-16 h-16 bg-[#2a293a] border border-white/10 rounded-full flex items-center justify-center mb-6 shadow-xl">
+        <i data-lucide="key-round" class="w-8 h-8 text-[#ebaa42]"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-white mb-2">Aktywacja aplikacji</h1>
+      <p class="text-xs text-slate-400 mb-8 max-w-[280px]">Wpisz jednorazowy 9-cyfrowy kod aktywacyjny, aby uzyskać dostęp do aplikacji.</p>
+
+      <div class="w-full max-w-xs space-y-4">
+        <div class="relative">
+          <input type="text" id="activation-code-input" maxlength="9" placeholder="np. 0UN2qFEjR" autocomplete="off" spellcheck="false" class="w-full bg-[#222133] border border-white/15 rounded-2xl px-4 py-3.5 text-center text-lg font-mono tracking-widest text-white uppercase placeholder:text-slate-600 focus:outline-none focus:border-[#ebaa42] transition shadow-inner">
+        </div>
+        <p id="auth-error-msg" class="text-xs text-red-400 font-medium hidden">Nieprawidłowy kod aktywacyjny!</p>
+        <button onclick="verifyActivationCode()" class="w-full btn-gold py-4 rounded-full text-center font-bold text-sm shadow-lg transition transform active:scale-95">
+          Aktywuj
+        </button>
+      </div>
+    </div>
+
+    <!-- EKRAN 1: Główny (Bilety) -->
+    <div id="screen-main" class="hidden flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
+      <div>
+        <!-- Górny pasek -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center gap-2 bg-[#2a293a] border border-white/10 px-3.5 py-2 rounded-full text-xs font-medium text-slate-200">
+            <i data-lucide="smartphone" class="w-4 h-4 text-slate-300"></i>
+            <span>zbiletem.pl</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="navigateTo('screen-wallet')" class="flex items-center gap-1.5 bg-[#2a293a] border border-white/10 px-3.5 py-2 rounded-full text-xs font-semibold hover:bg-[#343347] transition active:scale-95">
+              <span id="wallet-balance-display">20.00 zł</span>
+              <i data-lucide="wallet" class="w-4 h-4 text-slate-300"></i>
+            </button>
+            <button class="w-9 h-9 rounded-full bg-[#2a293a] border border-white/10 flex items-center justify-center text-slate-200">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Wybór miasta -->
+        <div class="flex justify-center items-center mb-6">
+          <button class="flex items-center gap-1 text-base font-semibold text-white">
+            <span>Radom</span>
+            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Nagłówek i aktywne bilety -->
+        <div class="text-center mb-6">
+          <h1 class="text-2xl font-bold tracking-tight text-white mb-5">Cześć!</h1>
+          
+          <!-- Lista zakupionych biletów -->
+          <div id="active-tickets-container" class="space-y-3 hidden">
+            <!-- Dynamiczne karty -->
+          </div>
+
+          <!-- Pusta informacja -->
+          <p id="no-tickets-msg" class="text-sm text-slate-400 max-w-[300px] mx-auto leading-relaxed">
+            W tej chwili nie masz aktywnych biletów. Kiedy kupisz bilet, znajdziesz go tutaj ;)
+          </p>
+        </div>
+      </div>
+
+      <!-- Dolna sekcja akcji (w widoku głównym) -->
+      <div class="flex flex-col items-center gap-4 mt-auto pt-4">
+        <button class="flex items-center gap-2 bg-[#313042] text-slate-200 px-4 py-2 rounded-full text-xs font-medium">
+          <span>Ostatnio kupione</span>
+          <i data-lucide="chevrons-up-down" class="w-3.5 h-3.5"></i>
+        </button>
+
+        <button onclick="navigateTo('screen-list')" class="w-full btn-gold py-4 rounded-full text-center font-medium text-base shadow-lg transition transform active:scale-98">
+          Kup bilet
+        </button>
+      </div>
+    </div>
+
+    <!-- EKRAN 2: Lista biletów krótkoterminowych -->
+    <div id="screen-list" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
+      <!-- Top nav -->
+      <div class="flex justify-between items-center mb-6">
+        <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <h2 class="text-base font-semibold text-white">Bilety krótkoterminowe</h2>
+        <button class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
+          <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Lista kart biletowych -->
+      <div class="space-y-4 pb-16">
+        <!-- 1-godzinny Normalny -->
+        <div class="rounded-2xl overflow-hidden shadow-md">
+          <div class="ticket-card p-4">
+            <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
+            <p class="text-xs text-slate-300 font-medium mb-3">Normalny • Radom</p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
+          </div>
+          <button onclick="openPurchaseModal('1-godzinny', 'Normalny', 5.00, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.')" class="w-full ticket-price-box py-3.5 text-center text-amber-400 font-bold text-base hover:bg-[#313c5a] transition">
+            5.00 zł
+          </button>
+        </div>
+
+        <!-- 1-godzinny Ulgowy -->
+        <div class="rounded-2xl overflow-hidden shadow-md">
+          <div class="ticket-card p-4">
+            <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
+            <p class="text-xs text-emerald-400 font-medium mb-3">Ulgowy • Radom</p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
+          </div>
+          <button onclick="openPurchaseModal('1-godzinny', 'Ulgowy', 2.50, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.')" class="w-full ticket-price-box py-3.5 text-center text-amber-400 font-bold text-base hover:bg-[#313c5a] transition">
+            2.50 zł
+          </button>
+        </div>
+
+        <!-- Jednorazowy Normalny -->
+        <div class="rounded-2xl overflow-hidden shadow-md">
+          <div class="ticket-card p-4">
+            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
+            <p class="text-xs text-slate-300 font-medium mb-3">Normalny • Radom</p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
+          </div>
+          <button onclick="openPurchaseModal('Jednorazowy', 'Normalny', 3.60, 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.')" class="w-full ticket-price-box py-3.5 text-center text-amber-400 font-bold text-base hover:bg-[#313c5a] transition">
+            3.60 zł
+          </button>
+        </div>
+
+        <!-- Jednorazowy Ulgowy -->
+        <div class="rounded-2xl overflow-hidden shadow-md">
+          <div class="ticket-card p-4">
+            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
+            <p class="text-xs text-emerald-400 font-medium mb-3">Ulgowy • Radom</p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
+          </div>
+          <button onclick="openPurchaseModal('Jednorazowy', 'Ulgowy', 1.80, 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.')" class="w-full ticket-price-box py-3.5 text-center text-amber-400 font-bold text-base hover:bg-[#313c5a] transition">
+            1.80 zł
+          </button>
+        </div>
+      </div>
+
+      <!-- Przycisk Filtruj -->
+      <div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 mb-[env(safe-area-inset-bottom)]">
+        <button class="bg-[#ebaa42] text-slate-900 font-semibold px-6 py-2.5 rounded-full shadow-xl flex items-center gap-2 text-sm">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+          <span>Filtruj</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- EKRAN 3: Szczegóły zakupu i Bottom Sheet -->
+    <div id="screen-detail" class="hidden flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar px-5 safe-padding-top pb-0">
+      <div class="flex justify-between items-center mb-4">
+        <button onclick="navigateTo('screen-list')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="flex-1 flex flex-col justify-start pt-2">
+        <div class="rounded-2xl overflow-hidden mb-6 shadow-md">
+          <div class="ticket-card p-5">
+            <h2 id="modal-ticket-title" class="text-xl font-bold text-white mb-1">Jednorazowy</h2>
+            <p id="modal-ticket-subtitle" class="text-xs font-semibold text-slate-300 mb-2">Normalny • Radom</p>
+            <p id="modal-ticket-type" class="text-xs text-slate-300 font-medium mb-1">Normalny</p>
+            <p id="modal-ticket-desc" class="text-xs text-slate-300 leading-relaxed mb-3">
+              Bilet jednorazowy ważny we wskazanym...
+            </p>
+            <button class="flex items-center gap-1 text-xs text-slate-300 font-medium">
+              <span>Czytaj więcej</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+          <div class="ticket-price-box py-3.5 px-5 flex justify-center items-center">
+            <span id="modal-unit-price" class="text-amber-400 font-bold text-base">3.60 zł</span>
+          </div>
+        </div>
+
+        <!-- Licznik ilości biletów -->
+        <div class="flex justify-center items-center gap-6 mb-6">
+          <button onclick="updateQuantity(-1)" class="w-11 h-11 rounded-full bg-[#2a293a] flex items-center justify-center text-slate-300 text-xl font-bold active:bg-slate-700">
+            <i data-lucide="minus" class="w-5 h-5"></i>
+          </button>
+          <span id="ticket-count" class="text-lg font-bold text-white w-4 text-center">1</span>
+          <button onclick="updateQuantity(1)" class="w-11 h-11 rounded-full bg-[#2a293a] flex items-center justify-center text-slate-300 text-xl font-bold active:bg-slate-700">
+            <i data-lucide="plus" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dolny panel transakcyjny -->
+      <div class="bottom-sheet -mx-5 px-6 pt-3 flex flex-col gap-4 border-t border-white/5">
+        <div class="w-10 h-1 bg-slate-600/50 rounded-full mx-auto mb-1"></div>
+
+        <!-- Numer boczny -->
+        <div class="flex justify-between items-center py-2 border-b border-white/5">
+          <span class="text-sm font-medium text-slate-200">Numer boczny</span>
+          <div class="flex items-center gap-1">
+            <input type="text" id="bus-number-input" placeholder="Wpisz" value="123" class="bg-transparent text-right text-sm text-slate-300 w-20 focus:outline-none placeholder-slate-500 font-medium" maxlength="4">
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+          </div>
+        </div>
+
+        <!-- Metoda płatności -->
+        <div class="flex justify-between items-center py-2 border-b border-white/5">
+          <span class="text-sm font-medium text-slate-200">Zapłać z</span>
+          <button onclick="togglePaymentMethod()" class="flex items-center gap-1 text-right">
+            <div class="text-xs text-slate-200 font-medium">
+              <div id="payment-method-title">Płatność</div>
+              <div id="payment-wallet-info">portfelem, 20,00 zł</div>
+            </div>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 ml-1"></i>
+          </button>
+        </div>
+
+        <!-- Podsumowanie ceny -->
+        <div class="flex justify-between items-center pt-1 pb-2">
+          <span class="text-sm font-medium text-slate-200">Razem</span>
+          <span id="total-price" class="text-xl font-bold text-white">3.60 zł</span>
+        </div>
+
+        <!-- Przycisk zakupu -->
+        <button onclick="processPurchase()" class="w-full bg-[#8c6a32] text-[#dfcaa2] py-4 rounded-full text-center font-semibold text-sm transition transform active:scale-98 shadow-lg">
+          Kup i aktywuj
+        </button>
+      </div>
+    </div>
+
+    <!-- EKRAN 4: Saldo portfela -->
+    <div id="screen-wallet" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top pb-8">
+      <div class="flex items-center mb-8 relative">
+        <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white absolute left-0 z-10">
+          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <h2 class="text-base font-semibold text-white w-full text-center">Saldo portfela</h2>
+      </div>
+
+      <div class="text-center mb-6">
+        <h1 id="wallet-balance-large" class="text-4xl font-extrabold text-[#ebaa42] mb-6">20.00 zł</h1>
+        <button onclick="addFunds(20)" class="bg-[#313042] text-slate-200 px-5 py-2.5 rounded-full text-sm font-medium inline-flex items-center gap-2 hover:bg-[#3d3c52] transition shadow-md active:scale-95">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>Dodaj środki</span>
+        </button>
+      </div>
+
+      <div class="mt-auto bg-[#1a1926] rounded-3xl overflow-hidden border border-white/5 shadow-xl">
+        <div class="w-10 h-1 bg-slate-600/40 rounded-full mx-auto my-2.5"></div>
+        <div id="wallet-history-container" class="divide-y divide-white/5"></div>
+      </div>
+    </div>
+
+    <!-- EKRAN 5: Aktywny bilet -->
+    <div id="screen-active-ticket" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#121217]">
+      <div class="bg-[#0e6138] px-5 safe-padding-top pb-6 flex flex-col justify-between shrink-0 shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center gap-2 text-white font-medium text-sm">
+            <span class="w-3 h-3 bg-white rounded-full inline-block animate-pulse"></span>
+            <span id="ticket-view-validity-header">Do końca kursu</span>
+          </div>
+          <button onclick="closeActiveTicketView()" class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div>
+          <h1 id="ticket-view-title" class="text-3xl font-extrabold text-white mb-1">Jednorazowy</h1>
+          <p id="ticket-view-type" class="text-emerald-400 font-bold text-lg">Ulgowy</p>
+        </div>
+      </div>
+
+      <!-- Marquee MZDiK Radom -->
+      <div class="bg-[#cfc1e8] text-[#5d3f82] font-medium text-xs py-1.5 overflow-hidden whitespace-nowrap">
+        <div class="animate-marquee">
+          <span class="mx-4">MZDiK Radom</span>
+          <span class="mx-4">MZDiK Radom</span>
+          <span class="mx-4">MZDiK Radom</span>
+          <span class="mx-4">MZDiK Radom</span>
+          <span class="mx-4">MZDiK Radom</span>
+          <span class="mx-4">MZDiK Radom</span>
+        </div>
+      </div>
+
+      <div class="px-5 pt-5 pb-8 flex-1 flex flex-col justify-between gap-4 safe-padding-bottom">
+        <div class="space-y-4">
+          <div class="bg-[#2a2932] rounded-2xl p-4 text-sm space-y-3.5 shadow-md">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-300 font-medium">Numer boczny</span>
+              <span id="ticket-view-bus" class="text-white font-bold">123</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-300 font-medium">Aktywny od</span>
+              <span id="ticket-view-timer" class="text-red-500 font-bold tracking-wider">00:11</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-300 font-medium">Ważny od</span>
+              <span id="ticket-view-start" class="text-white font-semibold text-xs">19.10.2026, 17:11:10</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-300 font-medium">Ważny do</span>
+              <span id="ticket-view-validity" class="text-white font-semibold">Do końca kursu</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-300 font-medium">Cena</span>
+              <span id="ticket-view-price" class="text-white font-bold">1.80 zł</span>
+            </div>
+          </div>
+
+          <div class="bg-[#2a2932] rounded-2xl p-4 text-xs text-slate-300 leading-relaxed shadow-md">
+            <p id="ticket-view-desc">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu. Nie uprawnia do przesiadek.</p>
+          </div>
+
+          <div class="bg-[#2a2932] rounded-xl py-2.5 px-4 text-center text-xs font-mono text-slate-300 tracking-wider shadow-md">
+            <span id="ticket-view-code">-</span>
+          </div>
+        </div>
+
+        <button onclick="showQRCodeModal()" class="w-full btn-gold py-3.5 rounded-full font-bold text-sm flex items-center justify-center gap-2 shadow-lg">
+          <i data-lucide="qr-code" class="w-5 h-5"></i>
+          <span>Pokaż kod QR</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DOLNY PASEK NAWIGACYJNY (SPA) -->
+    <div id="bottom-nav" class="hidden absolute bottom-0 left-0 right-0 bg-[#181724]/95 backdrop-blur border-t border-white/10 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] px-8 flex justify-around items-center z-40">
+      <button onclick="navigateTo('screen-main')" class="flex flex-col items-center gap-1 text-amber-400">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">Bilety</span>
+      </button>
+
+      <button class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200">
+        <i data-lucide="calendar" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">Odjazdy</span>
+      </button>
+
+      <button class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200">
+        <i data-lucide="settings" class="w-5 h-5"></i>
+        <span class="text-[10px] font-medium">Ustawienia</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Modal Kodu QR -->
+  <div id="qr-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 text-center max-w-xs w-full flex flex-col items-center shadow-2xl">
+      <h3 class="text-white font-bold text-base mb-4">Kod QR Kontroli</h3>
+      <div id="qrcode" class="bg-white p-3 rounded-2xl mb-4"></div>
+      <p class="text-xs text-slate-400 mb-5">Pokaż ten kod do skanowania kontrolerowi biletów</p>
+      <button onclick="hideQRCodeModal()" class="w-full btn-gold py-2.5 rounded-full font-semibold text-sm">Zamknij</button>
+    </div>
+  </div>
+
+  <!-- Skrypt logiki aplikacji -->
+  <script>
+    const state = {
+      isActivated: false,
+      currentScreen: 'screen-auth',
+      balance: 20.00,
+      paymentMethod: 'wallet', // 'wallet' or 'blik'
+      selectedTicket: {
+        title: 'Jednorazowy',
+        subtitle: 'Ulgowy • Radom',
+        type: 'Ulgowy',
+        price: 1.80,
+        desc: 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu. Nie uprawnia do przesiadek.'
+      },
+      quantity: 1,
+      activeTickets: [],
+      transactions: [
+        { dateGroup: 'Dzisiaj', items: [
+            { type: 'topup', name: 'Doładowanie zBiletem', price: 20.00 },
+            { type: 'topup', name: 'Doładowanie zBiletem', price: 20.00 },
+            { type: 'topup', name: 'Doładowanie zBiletem', price: 20.00 }
+        ]},
+        { dateGroup: 'października 1, 2026', items: [
+            { type: 'topup', name: 'Doładowanie zBiletem', price: 20.00 }
+        ]}
+      ],
+      viewingTicketId: null
+    };
+
+    let activeTimerInterval = null;
+
+    // Funkcje obsługi localStorage
+    function saveState() {
+      const dataToSave = {
+        isActivated: state.isActivated,
+        balance: state.balance,
+        paymentMethod: state.paymentMethod,
+        activeTickets: state.activeTickets,
+        transactions: state.transactions
+      };
+      localStorage.setItem('zbiletem_app_state', JSON.stringify(dataToSave));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem('zbiletem_app_state');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.isActivated !== undefined) state.isActivated = parsed.isActivated;
+          if (parsed.balance !== undefined) state.balance = parsed.balance;
+          if (parsed.paymentMethod) state.paymentMethod = parsed.paymentMethod;
+          if (Array.isArray(parsed.transactions)) state.transactions = parsed.transactions;
+          if (Array.isArray(parsed.activeTickets)) {
+            const now = Date.now();
+            // Odfiltrowujemy bilety, których czas ważności już minął
+            state.activeTickets = parsed.activeTickets.filter(ticket => {
+              if (ticket.expiresAt) {
+                return now < ticket.expiresAt;
+              }
+              return true;
+            });
+          }
+        } catch (e) {
+          console.error('Błąd wczytywania danych z localStorage:', e);
+        }
+      }
+    }
+
+    async function verifyActivationCode() {
+      const input = document.getElementById('activation-code-input').value.trim();
+      const errorMsg = document.getElementById('auth-error-msg');
+
+      if (!input) {
+        errorMsg.innerText = "Wpisz kod aktywacyjny!";
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        // Wysyłamy zapytanie do naszej funkcji na Netlify
+        const response = await fetch('/.netlify/functions/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: input })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          state.isActivated = true;
+          errorMsg.classList.add('hidden');
+          saveState();
+          navigateTo('screen-main');
+        } else {
+          errorMsg.innerText = data.message || "Nieprawidłowy kod.";
+          errorMsg.classList.remove('hidden');
+        }
+      } catch (err) {
+        errorMsg.innerText = "Błąd połączenia z serwerem.";
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+
+    window.onload = function() {
+      loadState(); // Wczytanie zapisanego stanu
+      lucide.createIcons();
+
+      if (state.isActivated) {
+        navigateTo('screen-main');
+      } else {
+        navigateTo('screen-auth');
+      }
+
+      updateWalletUI();
+      renderActiveTickets();
+      renderTransactions();
+      startActiveTimers();
+    };
+
+    function navigateTo(screenId) {
+      // Zabezpieczenie: jeśli konto nie zostało aktywowane, blokuj przejście do innych ekranów
+      if (!state.isActivated && screenId !== 'screen-auth') {
+        screenId = 'screen-auth';
+      }
+
+      document.getElementById('screen-auth').classList.add('hidden');
+      document.getElementById('screen-main').classList.add('hidden');
+      document.getElementById('screen-list').classList.add('hidden');
+      document.getElementById('screen-detail').classList.add('hidden');
+      document.getElementById('screen-[#wallet-balance-large]' ? 'screen-wallet' : 'screen-wallet').classList.add('hidden');
+      document.getElementById('screen-active-ticket').classList.add('hidden');
+
+      document.getElementById(screenId).classList.remove('hidden');
+      state.currentScreen = screenId;
+
+      const bottomNav = document.getElementById('bottom-nav');
+      if (state.isActivated && (screenId === 'screen-main' || screenId === 'screen-list')) {
+        bottomNav.classList.remove('hidden');
+      } else {
+        bottomNav.classList.add('hidden');
+      }
+    }
+
+    function startActiveTimers() {
+      if (activeTimerInterval) clearInterval(activeTimerInterval);
+      activeTimerInterval = setInterval(() => {
+        const now = Date.now();
+        const prevCount = state.activeTickets.length;
+
+        state.activeTickets = state.activeTickets.filter(ticket => {
+          if (ticket.expiresAt) {
+            return now < ticket.expiresAt;
+          }
+          const maxSeconds = ticket.durationSeconds || 3600;
+          return ticket.timerSeconds < maxSeconds;
+        });
+
+        state.activeTickets.forEach(ticket => {
+          if (ticket.purchasedAt) {
+            ticket.timerSeconds = Math.max(1, Math.floor((now - ticket.purchasedAt) / 1000));
+          } else {
+            ticket.timerSeconds++;
+          }
+        });
+
+        if (state.activeTickets.length !== prevCount) {
+          renderActiveTickets();
+          saveState(); // Zapis po wygaśnięciu biletów
+          if (state.viewingTicketId && !state.activeTickets.some(x => x.id === state.viewingTicketId)) {
+            hideQRCodeModal();
+            closeActiveTicketView();
+            return;
+          }
+        }
+
+        if (state.currentScreen === 'screen-active-ticket' && state.viewingTicketId) {
+          const t = state.activeTickets.find(x => x.id === state.viewingTicketId);
+          if (t) {
+            document.getElementById('ticket-view-timer').innerText = formatTimer(t.timerSeconds);
+          }
+        }
+      }, 1000);
+    }
+
+    function formatTimer(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateWalletUI() {
+      const formatted = state.balance.toFixed(2) + ' zł';
+      document.getElementById('wallet-balance-display').innerText = formatted;
+      document.getElementById('wallet-balance-large').innerText = formatted;
+      updatePaymentDisplay();
+    }
+
+    function updatePaymentDisplay() {
+      const infoEl = document.getElementById('payment-wallet-info');
+      const titleEl = document.getElementById('payment-method-title');
+      if (state.paymentMethod === 'wallet') {
+        titleEl.innerText = 'Płatność';
+        infoEl.innerText = `portfelem, ${state.balance.toFixed(2).replace('.', ',')} zł`;
+      } else {
+        titleEl.innerText = 'Płatność';
+        infoEl.innerText = 'BLIK';
+      }
+    }
+
+    function togglePaymentMethod() {
+      state.paymentMethod = state.paymentMethod === 'wallet' ? 'blik' : 'wallet';
+      updatePaymentDisplay();
+      saveState();
+    }
+
+    function addFunds(amount) {
+      state.balance += amount;
+      state.transactions[0].items.unshift({
+        type: 'topup',
+        name: 'Doładowanie zBiletem',
+        price: amount
+      });
+      updateWalletUI();
+      renderTransactions();
+      saveState(); // Zapis stanu po doładowaniu
+    }
+
+    function renderTransactions() {
+      const container = document.getElementById('wallet-history-container');
+      container.innerHTML = '';
+
+      state.transactions.forEach(group => {
+        const groupEl = document.createElement('div');
+        let itemsHtml = '';
+        group.items.forEach(item => {
+          const isTicket = item.type === 'ticket';
+          const priceColor = isTicket ? 'text-red-500' : 'text-emerald-500';
+          const icon = isTicket ? 'ticket' : 'download';
+          const priceFormatted = item.price.toFixed(2) + ' zł';
+
+          itemsHtml += `
+            <div class="px-5 py-3.5 flex justify-between items-center">
+              <div class="flex items-center gap-3">
+                <i data-lucide="${icon}" class="w-5 h-5 text-slate-300"></i>
+                <span class="text-sm font-medium text-slate-200">${item.name}</span>
+              </div>
+              <span class="text-sm font-semibold ${priceColor}">${priceFormatted}</span>
+            </div>
+          `;
+        });
+
+        groupEl.innerHTML = `
+          <div class="bg-[#21202e] px-5 py-2 text-center text-xs font-medium text-slate-400">
+            ${group.dateGroup}
+          </div>
+          <div class="divide-y divide-white/5">
+            ${itemsHtml}
+          </div>
+        `;
+        container.appendChild(groupEl);
+      });
+      lucide.createIcons();
+    }
+
+    function renderActiveTickets() {
+      const container = document.getElementById('active-tickets-container');
+      const emptyMsg = document.getElementById('no-tickets-msg');
+
+      if (state.activeTickets.length > 0) {
+        emptyMsg.classList.add('hidden');
+        container.classList.remove('hidden');
+        container.innerHTML = '';
+
+        state.activeTickets.forEach(ticket => {
+          const card = document.createElement('div');
+          card.onclick = () => openActiveTicketView(ticket.id);
+          card.className = 'bg-[#292838] border border-emerald-500/30 rounded-2xl p-4 text-left shadow-lg cursor-pointer hover:border-emerald-500 transition relative overflow-hidden';
+          card.innerHTML = `
+            <div class="flex justify-between items-start mb-1">
+              <div>
+                <span class="inline-block bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1">AKTYWNY</span>
+                <h3 class="font-bold text-white text-base">${ticket.title}</h3>
+              </div>
+              <span class="text-xs text-emerald-400 font-bold">${ticket.type}</span>
+            </div>
+            <p class="text-xs text-slate-300 mb-2">Radom • Nr boczny: <strong class="text-white">${ticket.busNumber}</strong></p>
+            <div class="flex justify-between items-center text-xs text-slate-400 border-t border-white/5 pt-2 mt-2">
+              <span>Ważny od: <strong class="text-slate-200">${ticket.startDate}</strong></span>
+              <span class="text-amber-400 font-bold">${ticket.price.toFixed(2)} zł</span>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } else {
+        emptyMsg.classList.remove('hidden');
+        container.classList.add('hidden');
+      }
+    }
+
+    function openPurchaseModal(title, type, price, desc) {
+      state.selectedTicket = { title, subtitle: `${type} • Radom`, type, price, desc };
+      state.quantity = 1;
+
+      document.getElementById('modal-ticket-title').innerText = title;
+      document.getElementById('modal-ticket-subtitle').innerText = `${type} • Radom`;
+      document.getElementById('modal-ticket-type').innerText = type;
+      document.getElementById('modal-ticket-desc').innerText = desc.substring(0, 45) + '...';
+      document.getElementById('modal-unit-price').innerText = `${price.toFixed(2)} zł`;
+      
+      const subTitleEl = document.getElementById('modal-ticket-subtitle');
+      subTitleEl.className = type === 'Ulgowy' ? 'text-xs font-semibold text-emerald-400 mb-2' : 'text-xs font-semibold text-slate-300 mb-2';
+
+      updateTotals();
+      navigateTo('screen-detail');
+    }
+
+    function updateQuantity(change) {
+      if (state.quantity + change >= 1 && state.quantity + change <= 10) {
+        state.quantity += change;
+        updateTotals();
+      }
+    }
+
+    function updateTotals() {
+      document.getElementById('ticket-count').innerText = state.quantity;
+      const total = (state.selectedTicket.price * state.quantity).toFixed(2);
+      document.getElementById('total-price').innerText = `${total} zł`;
+    }
+
+    function processPurchase() {
+      const busNumber = document.getElementById('bus-number-input').value.trim() || '123';
+      const totalPrice = state.selectedTicket.price * state.quantity;
+
+      if (state.paymentMethod === 'wallet' && state.balance < totalPrice) {
+        alert('Brak wystarczających środków w portfelu! Doładuj konto lub wybierz BLIK.');
+        return;
+      }
+
+      if (state.paymentMethod === 'wallet') {
+        state.balance -= totalPrice;
+        state.transactions[0].items.unshift({
+          type: 'ticket',
+          name: state.selectedTicket.title,
+          price: -totalPrice
+        });
+      }
+
+      const now = new Date();
+      const dateStr = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()}, ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+      const randomCode = 'WR-1700-' + Math.floor(1000000000 + Math.random() * 9000000000);
+      const durationSeconds = 3600;
+      const purchasedAt = now.getTime();
+
+      const newTicket = {
+        id: randomCode,
+        title: state.selectedTicket.title,
+        type: state.selectedTicket.type,
+        price: state.selectedTicket.price,
+        busNumber: busNumber,
+        startDate: dateStr,
+        validity: state.selectedTicket.title.includes('1-godzinny') ? 'Ważny 1h' : 'Do końca kursu',
+        desc: state.selectedTicket.desc,
+        timerSeconds: 1,
+        purchasedAt: purchasedAt,
+        durationSeconds: durationSeconds,
+        expiresAt: purchasedAt + durationSeconds * 1000
+      };
+
+      state.activeTickets.unshift(newTicket);
+
+      updateWalletUI();
+      renderTransactions();
+      renderActiveTickets();
+      saveState(); // Zapis stanu po zakupie biletu
+      openActiveTicketView(newTicket.id);
+    }
+
+    function openActiveTicketView(ticketId) {
+      const ticket = state.activeTickets.find(t => t.id === ticketId);
+      if (!ticket) return;
+
+      state.viewingTicketId = ticketId;
+
+      document.getElementById('ticket-view-title').innerText = ticket.title;
+      document.getElementById('ticket-view-type').innerText = ticket.type;
+      document.getElementById('ticket-view-type').className = ticket.type === 'Ulgowy' ? 'text-emerald-400 font-bold text-lg' : 'text-slate-200 font-bold text-lg';
+      document.getElementById('ticket-view-bus').innerText = ticket.busNumber;
+      document.getElementById('ticket-view-timer').innerText = formatTimer(ticket.timerSeconds);
+      document.getElementById('ticket-view-start').innerText = ticket.startDate;
+      document.getElementById('ticket-view-validity').innerText = ticket.validity;
+      document.getElementById('ticket-view-validity-header').innerText = ticket.validity;
+      document.getElementById('ticket-view-price').innerText = ticket.price.toFixed(2) + ' zł';
+      document.getElementById('ticket-view-desc').innerText = ticket.desc;
+      document.getElementById('ticket-view-code').innerText = ticket.id;
+
+      navigateTo('screen-active-ticket');
+    }
+
+    function closeActiveTicketView() {
+      state.viewingTicketId = null;
+      navigateTo('screen-main');
+    }
+
+    function showQRCodeModal() {
+      const modal = document.getElementById('qr-modal');
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+      
+      new QRCode(qrContainer, {
+        text: state.viewingTicketId || '',
+        width: 160,
+        height: 160,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function hideQRCodeModal() {
+      document.getElementById('qr-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
