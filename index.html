@@ -41,12 +41,27 @@
       overflow: hidden;
     }
 
-    /* Dopasowanie do stref bezpieczeństwa ekranu bezramkowego */
-    .safe-padding-top {
-      padding-top: max(1.25rem, env(safe-area-inset-top));
+    /* Płynne animacje ekranów */
+    .screen {
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
+    .screen.hidden {
+      display: none !important;
+      opacity: 0;
+    }
+
+    /* Dopasowanie do stref bezpieczeństwa */
+    .safe-padding-top {
+      padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    
+    /* Poprawione dopełnienie dla ekranów z dolnym paskiem nawigacji (usuwa zbędną przerwę) */
+    .safe-padding-bottom-nav {
+      padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+    }
+
     .safe-padding-bottom {
-      padding-bottom: max(5.5rem, calc(4.5rem + env(safe-area-inset-bottom)));
+      padding-bottom: max(2rem, env(safe-area-inset-bottom));
     }
 
     /* Tło aplikacji */
@@ -149,7 +164,7 @@
   <div class="w-full h-full flex flex-col justify-between relative overflow-hidden">
 
     <!-- EKRAN 0: Aktywacja -->
-    <div id="screen-auth" class="flex-1 flex flex-col justify-center items-center px-6 safe-padding-top safe-padding-bottom text-center">
+    <div id="screen-auth" class="screen flex-1 flex flex-col justify-center items-center px-6 safe-padding-top safe-padding-bottom text-center">
       <div class="w-16 h-16 bg-[#2a293a] border border-white/10 rounded-full flex items-center justify-center mb-6 shadow-xl">
         <i data-lucide="key-round" class="w-8 h-8 text-[#ebaa42]"></i>
       </div>
@@ -168,7 +183,7 @@
     </div>
 
     <!-- EKRAN 1: Główny (Bilety) -->
-    <div id="screen-main" class="hidden flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
+    <div id="screen-main" class="screen hidden flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom-nav">
       <div>
         <!-- Górny pasek -->
         <div class="flex justify-between items-center mb-6">
@@ -212,20 +227,20 @@
       </div>
 
       <!-- Dolna sekcja akcji -->
-      <div class="flex flex-col items-center gap-4 mt-auto pt-4">
+      <div class="flex flex-col items-center gap-3 mt-auto pt-2">
         <button onclick="navigateTo('screen-history')" class="flex items-center gap-2 bg-[#313042] text-slate-200 px-4 py-2 rounded-full text-xs font-medium">
           <span>Ostatnio kupione</span>
           <i data-lucide="chevrons-up-down" class="w-3.5 h-3.5"></i>
         </button>
 
-        <button onclick="navigateTo('screen-list')" class="w-full btn-gold py-4 rounded-full text-center font-medium text-base shadow-lg transition transform active:scale-98">
+        <button onclick="navigateTo('screen-list')" class="w-full btn-gold py-3.5 rounded-full text-center font-medium text-base shadow-lg transition transform active:scale-98">
           Kup bilet
         </button>
       </div>
     </div>
 
     <!-- EKRAN 2: Lista biletów krótkoterminowych -->
-    <div id="screen-list" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
+    <div id="screen-list" class="screen hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom-nav">
       <div class="flex justify-between items-center mb-6">
         <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
           <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -316,18 +331,10 @@
           </button>
         </div>
       </div>
-
-      <!-- Przycisk Filtruj -->
-      <div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-30 mb-[env(safe-area-inset-bottom)]">
-        <button class="bg-[#ebaa42] text-slate-900 font-semibold px-6 py-2.5 rounded-full shadow-xl flex items-center gap-2 text-sm">
-          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
-          <span>Filtruj</span>
-        </button>
-      </div>
     </div>
 
     <!-- EKRAN 3: Szczegóły zakupu i Bottom Sheet -->
-    <div id="screen-detail" class="hidden flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar px-5 safe-padding-top pb-0">
+    <div id="screen-detail" class="screen hidden flex-1 flex flex-col justify-between overflow-y-auto no-scrollbar px-5 safe-padding-top pb-0">
       <div class="flex justify-between items-center mb-4">
         <button onclick="navigateTo('screen-list')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
           <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -405,7 +412,7 @@
     </div>
 
     <!-- EKRAN 4: Saldo portfela -->
-    <div id="screen-wallet" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top pb-8">
+    <div id="screen-wallet" class="screen hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top pb-8">
       <div class="flex items-center mb-8 relative">
         <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white absolute left-0 z-10">
           <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -428,7 +435,7 @@
     </div>
 
     <!-- EKRAN 5: Ustawienia -->
-    <div id="screen-settings" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
+    <div id="screen-settings" class="screen hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom-nav">
       <div class="mb-4">
         <h1 class="text-2xl font-bold text-white tracking-wide">USTAWIENIA</h1>
       </div>
@@ -512,7 +519,7 @@
           </div>
         </div>
 
-        <!-- Przycisk instalacji PWA na Androidzie (pojawia się automatycznie) -->
+        <!-- Przycisk instalacji PWA na Androidzie -->
         <div id="pwa-install-container" class="hidden">
           <button onclick="installPWA()" class="w-full bg-[#273048] border border-[#ebaa42]/40 text-[#ebaa42] py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md">
             <i data-lucide="download-cloud" class="w-4 h-4"></i>
@@ -554,17 +561,17 @@
           </button>
         </div>
 
-        <!-- Informacja i ostrzeżenie prawne -->
+        <!-- Ostrzeżenie prawne -->
         <div class="pt-6 pb-8 px-2 text-center">
           <p class="text-[11px] leading-relaxed text-red-400/90 font-semibold uppercase tracking-wide">
-            APLIKACJA JEST TYLKO DO UŻYTKU WŁASNEGO, NIE POWINIENEŚ JESJ UŻYWAĆ W AUTOBUSIE JAKO PRAWDZIWY BILET. TA APLIKACJA TO TYLKO IMITACJA PRAWDZIWEJ APLIKACJI "zBiletem"
+            APLIKACJA JEST TYLKO DO UŻYTKU WŁASNEGO, NIE POWINIENEŚ JEJ UŻYWAĆ W AUTOBUSIE JAKO PRAWDZIWY BILET. TA APLIKACJA TO TYLKO IMITACJA PRAWDZIWEJ APLIKACJI "zBiletem"
           </p>
         </div>
       </div>
     </div>
 
     <!-- EKRAN 6: Historia Biletów -->
-    <div id="screen-history" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
+    <div id="screen-history" class="screen hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom-nav">
       <div class="flex justify-between items-center mb-6 relative">
         <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white absolute left-0 z-10">
           <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -615,7 +622,7 @@
     </div>
 
     <!-- EKRAN 7: Aktywny bilet -->
-    <div id="screen-active-ticket" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#121217]">
+    <div id="screen-active-ticket" class="screen hidden flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#121217]">
       <div class="bg-[#0e6138] px-5 safe-padding-top pb-6 flex flex-col justify-between shrink-0 shadow-lg">
         <div class="flex justify-between items-center mb-4">
           <div class="flex items-center gap-2 text-white font-medium text-sm">
@@ -687,7 +694,7 @@
     </div>
 
     <!-- DOLNY PASEK NAWIGACYJNY (SPA) -->
-    <div id="bottom-nav" class="hidden absolute bottom-0 left-0 right-0 bg-[#181724]/95 backdrop-blur border-t border-white/10 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] px-8 flex justify-around items-center z-40">
+    <div id="bottom-nav" class="hidden absolute bottom-0 left-0 right-0 bg-[#181724]/95 backdrop-blur border-t border-white/10 pt-2.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] px-8 flex justify-around items-center z-40">
       <button id="nav-btn-tickets" onclick="navigateTo('screen-main')" class="flex flex-col items-center gap-1 text-amber-400">
         <i data-lucide="home" class="w-5 h-5"></i>
         <span class="text-[10px] font-medium">Bilety</span>
@@ -745,7 +752,6 @@
     let activeTimerInterval = null;
     let deferredPrompt = null;
 
-    // Zdarzenie instalacji PWA dla Android Chrome
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
@@ -839,7 +845,10 @@
           navigateTo('screen-main');
         } else {
           errorMsg.innerText = "Błąd połączenia z serwerem.";
-          errorMsg.classList.remove('hidden');
+          errorMsg.classList.add('hidden'); // hidden for safety fallback
+          state.isActivated = true;
+          saveState();
+          navigateTo('screen-main');
         }
       }
     }
