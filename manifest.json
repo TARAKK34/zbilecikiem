@@ -1,0 +1,22 @@
+{
+  "short_name": "zBiletem",
+  "name": "zBiletem Radom",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#151422",
+  "theme_color": "#151422",
+  "display": "standalone",
+  "orientation": "portrait"
+}
