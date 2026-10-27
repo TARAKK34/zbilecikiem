@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pl" class="h-full bg-[#151422]">
 <head>
@@ -429,10 +427,10 @@
       </div>
     </div>
 
-    <!-- EKRAN 5: Ustawienia (Odwzorowany ze zrzutów) -->
+    <!-- EKRAN 5: Ustawienia -->
     <div id="screen-settings" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
       <div class="mb-4">
-        <h1 class="text-2xl font-bold text-white">518729439</h1>
+        <h1 class="text-2xl font-bold text-white tracking-wide">USTAWIENIA</h1>
       </div>
 
       <div class="space-y-4 pb-12">
@@ -514,6 +512,14 @@
           </div>
         </div>
 
+        <!-- Przycisk instalacji PWA na Androidzie (pojawia się automatycznie) -->
+        <div id="pwa-install-container" class="hidden">
+          <button onclick="installPWA()" class="w-full bg-[#273048] border border-[#ebaa42]/40 text-[#ebaa42] py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md">
+            <i data-lucide="download-cloud" class="w-4 h-4"></i>
+            <span>Zainstaluj aplikację na ekranie</span>
+          </button>
+        </div>
+
         <!-- Grupa 4 (Social media) -->
         <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
           <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
@@ -547,10 +553,17 @@
             <span>Wyloguj</span>
           </button>
         </div>
+
+        <!-- Informacja i ostrzeżenie prawne -->
+        <div class="pt-6 pb-8 px-2 text-center">
+          <p class="text-[11px] leading-relaxed text-red-400/90 font-semibold uppercase tracking-wide">
+            APLIKACJA JEST TYLKO DO UŻYTKU WŁASNEGO, NIE POWINIENEŚ JESJ UŻYWAĆ W AUTOBUSIE JAKO PRAWDZIWY BILET. TA APLIKACJA TO TYLKO IMITACJA PRAWDZIWEJ APLIKACJI "zBiletem"
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- EKRAN 6: Historia Biletów (Odwzorowana ze zrzutu) -->
+    <!-- EKRAN 6: Historia Biletów -->
     <div id="screen-history" class="hidden flex-1 flex flex-col overflow-y-auto no-scrollbar px-5 safe-padding-top safe-padding-bottom">
       <div class="flex justify-between items-center mb-6 relative">
         <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white absolute left-0 z-10">
@@ -560,7 +573,6 @@
       </div>
 
       <div id="expired-tickets-container" class="space-y-4 pb-12">
-        <!-- Domyślne wygasłe bilety wzorowane na zrzucie -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
@@ -710,7 +722,7 @@
       isActivated: false,
       currentScreen: 'screen-auth',
       balance: 20.00,
-      paymentMethod: 'wallet', // 'wallet' or 'blik'
+      paymentMethod: 'wallet',
       selectedTicket: {
         title: 'Jednorazowy',
         subtitle: 'Ulgowy • Radom',
@@ -731,6 +743,27 @@
     };
 
     let activeTimerInterval = null;
+    let deferredPrompt = null;
+
+    // Zdarzenie instalacji PWA dla Android Chrome
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('pwa-install-container');
+      if (installBtn) installBtn.classList.remove('hidden');
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            document.getElementById('pwa-install-container').classList.add('hidden');
+          }
+          deferredPrompt = null;
+        });
+      }
+    }
 
     function saveState() {
       const dataToSave = {
@@ -799,7 +832,6 @@
           errorMsg.classList.remove('hidden');
         }
       } catch (err) {
-        // Zabezpieczenie na wypadek braku serwera (fallback aktywacji)
         if (input.length >= 6) {
           state.isActivated = true;
           errorMsg.classList.add('hidden');
@@ -858,7 +890,6 @@
       }
       state.currentScreen = screenId;
 
-      // Pasek nawigacji dolnej
       const bottomNav = document.getElementById('bottom-nav');
       if (state.isActivated && ['screen-main', 'screen-list', 'screen-settings', 'screen-history'].includes(screenId)) {
         bottomNav.classList.remove('hidden');
@@ -866,7 +897,6 @@
         bottomNav.classList.add('hidden');
       }
 
-      // Podświetlanie nawigacji
       const btnTickets = document.getElementById('nav-btn-tickets');
       const btnSettings = document.getElementById('nav-btn-settings');
       if (btnTickets && btnSettings) {
@@ -1043,7 +1073,6 @@
       if (!container) return;
 
       if (state.historyTickets.length > 0) {
-        // Dodaj dynamicznie nowe wygasłe bilety do istniejącej listy
         state.historyTickets.forEach(ticket => {
           const card = document.createElement('div');
           card.className = 'ticket-card-wrapper shadow-md mb-4';
