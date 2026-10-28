@@ -237,7 +237,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 2: Lista biletów krótkoterminowych (Dynamiczne ceny) -->
+    <!-- EKRAN 2: Lista biletów krótkoterminowych -->
     <div id="screen-list" class="screen px-5 safe-padding-top app-screen-content no-scrollbar">
       <div class="flex justify-between items-center mb-6">
         <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
@@ -249,9 +249,7 @@
         </button>
       </div>
 
-      <div id="tickets-list-container" class="space-y-4 pb-16">
-        <!-- Generowane dynamicznie w zależności od wybranego miasta i cen -->
-      </div>
+      <div id="tickets-list-container" class="space-y-4 pb-16"></div>
     </div>
 
     <!-- EKRAN 3: Szczegóły zakupu i Bottom Sheet -->
@@ -260,7 +258,6 @@
         <button onclick="navigateTo('screen-list')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
           <i data-lucide="chevron-left" class="w-6 h-6"></i>
         </button>
-        <!-- Licznik czasu transakcji jak na zrzucie -->
         <div class="bg-[#2a293a] border border-white/10 px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-200 flex items-center gap-1.5">
           <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-300"></i>
           <span id="purchase-timer">120 sekund</span>
@@ -301,7 +298,6 @@
       <div class="bottom-sheet -mx-5 px-6 pt-3 flex flex-col gap-4 border-t border-white/5">
         <div class="w-10 h-1 bg-slate-600/50 rounded-full mx-auto mb-1"></div>
 
-        <!-- Warunkowy numer boczny (tylko dla biletów jednorazowych) -->
         <div id="bus-number-container" class="flex justify-between items-center py-2 border-b border-white/5">
           <span class="text-sm font-medium text-slate-200">Numer boczny</span>
           <div class="flex items-center gap-1">
@@ -379,6 +375,22 @@
             <span>Pasażerowie</span>
             <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
           </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>Firmy</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>Faktury</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>Powiązane konta</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>Zapisane miejsca</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
         </div>
 
         <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
@@ -389,6 +401,35 @@
           <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
             <span>Live activities</span>
             <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <div>
+              <div>Język</div>
+              <div class="text-xs text-slate-400">Polski</div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <div>
+              <div>Motyw</div>
+              <div class="text-xs text-slate-400">Automatyczny</div>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
+        </div>
+
+        <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>Ustawienia prywatności</span>
+            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>F.A.Q.</span>
+            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
+          </div>
+          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
+            <span>Napisz do nas</span>
+            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
           </div>
         </div>
 
@@ -429,18 +470,7 @@
       </div>
 
       <div id="expired-tickets-container" class="space-y-4 pb-12">
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • MZDiK Radom</p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do koń...</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <div class="bg-[#383747] p-3 text-xs text-slate-300 flex items-center gap-2">
-            <i data-lucide="hourglass" class="w-4 h-4 text-slate-400"></i>
-            <span>Wygasł 19 października</span>
-          </div>
-        </div>
+        <!-- Generowane dynamicznie bez duplikatów -->
       </div>
     </div>
 
@@ -470,7 +500,6 @@
       <div class="px-5 pt-5 pb-8 flex-1 flex flex-col justify-between gap-4">
         <div class="space-y-4">
           <div class="bg-[#2a2932] rounded-2xl p-4 text-sm space-y-3.5 shadow-md">
-            <!-- Wiersz numeru bocznego ukrywany dla biletów sieciowych -->
             <div id="active-bus-row" class="flex justify-between items-center">
               <span class="text-slate-300 font-medium">Numer boczny</span>
               <span id="ticket-view-bus" class="text-white font-bold">123</span>
@@ -557,7 +586,6 @@
   </div>
 
   <script>
-    // Baza cenników dla poszczególnych miast (normalny / ulgowy)
     const cityPricing = {
       "Warszawa": { h1N: 6.00, h1U: 3.00, regN: 4.60, regU: 2.30, d24N: 22.00, d24U: 11.00 },
       "Kraków": { h1N: 6.00, h1U: 3.00, regN: 6.00, regU: 3.00, d24N: 22.00, d24U: 11.00 },
@@ -570,7 +598,9 @@
     };
 
     function getPricesForCity(city) {
-      return cityPricing[city] || { h1N: 5.00, h1U: 2.50, regN: 3.60, regU: 1.80, d24N: 14.00, d24U: 7.00 };
+      if (cityPricing[city]) return cityPricing[city];
+      // Domyślne ceny dla miast spoza głównej listy
+      return { h1N: 4.80, h1U: 2.40, regN: 3.60, regU: 1.80, d24N: 14.00, d24U: 7.00 };
     }
 
     const cityTransportOperators = {
@@ -657,7 +687,6 @@
       const p = getPricesForCity(state.selectedCity);
 
       container.innerHTML = `
-        <!-- 1-godzinny Normalny -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
@@ -670,7 +699,6 @@
           </button>
         </div>
 
-        <!-- 1-godzinny Ulgowy -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
@@ -683,7 +711,6 @@
           </button>
         </div>
 
-        <!-- Jednorazowy Normalny -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
@@ -696,7 +723,6 @@
           </button>
         </div>
 
-        <!-- Jednorazowy Ulgowy -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
@@ -709,7 +735,6 @@
           </button>
         </div>
 
-        <!-- 24-godzinny Normalny -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
@@ -722,7 +747,6 @@
           </button>
         </div>
 
-        <!-- 24-godzinny Ulgowy -->
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
@@ -761,7 +785,6 @@
         bottomNav.classList.add('hidden');
       }
 
-      // Obsługa licznika czasu w szczegółach zakupu
       if (screenId === 'screen-detail') {
         startPurchaseTimer();
       } else {
@@ -853,7 +876,6 @@
       const subTitleEl = document.getElementById('modal-ticket-subtitle');
       subTitleEl.className = type === 'Ulgowy' ? 'text-xs font-semibold text-emerald-400 mb-2' : 'text-xs font-semibold text-slate-300 mb-2';
 
-      // Sprawdzenie czy to bilet sieciowy (1-godzinny lub 24-godzinny) -> ukrywamy numer boczny
       const busContainer = document.getElementById('bus-number-container');
       if (title.includes('godzinny')) {
         busContainer.classList.add('hidden');
@@ -932,6 +954,7 @@
       updateWalletUI();
       renderTransactions();
       renderActiveTickets();
+      renderHistoryTickets();
       saveState();
       openActiveTicketView(newTicket.id);
     }
@@ -946,7 +969,6 @@
       document.getElementById('ticket-view-type').innerText = ticket.type;
       document.getElementById('ticket-view-type').className = ticket.type === 'Ulgowy' ? 'text-emerald-400 font-bold text-lg' : 'text-slate-200 font-bold text-lg';
       
-      // Ukrywanie wiersza numeru bocznego w widoku aktywnego biletu jeśli to bilet sieciowy
       const busRow = document.getElementById('active-bus-row');
       if (ticket.isNetworkTicket) {
         busRow.style.display = 'none';
@@ -1159,6 +1181,7 @@
     function renderHistoryTickets() {
       const container = document.getElementById('expired-tickets-container');
       if (!container) return;
+      container.innerHTML = ''; // <--- NAPRAWIONE: Czyszczenie kontenera zapobiega duplikatom!
 
       if (state.historyTickets.length > 0) {
         state.historyTickets.forEach(ticket => {
@@ -1176,7 +1199,7 @@
               <span>Wygasł ${ticket.startDate.split(',')[0]}</span>
             </div>
           `;
-          container.prepend(card);
+          container.appendChild(card);
         });
         lucide.createIcons();
       }
