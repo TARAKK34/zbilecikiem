@@ -40,7 +40,6 @@
       overflow: hidden;
     }
 
-    /* Płynne animacje ekranów */
     .screen {
       position: absolute;
       inset: 0;
@@ -61,7 +60,6 @@
       z-index: 10;
     }
 
-    /* Dopasowanie do stref bezpieczeństwa ekranów bezramkowych */
     .safe-padding-top {
       padding-top: max(1.25rem, env(safe-area-inset-top));
     }
@@ -70,12 +68,10 @@
       padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 16px));
     }
 
-    /* Tło aplikacji */
     .app-bg {
       background: radial-gradient(circle at top, #232236 0%, #151422 100%);
     }
 
-    /* Stylizacja karty z wcięciami w stylu zBiletem */
     .ticket-card-wrapper {
       position: relative;
       background-color: #4a4959;
@@ -125,7 +121,6 @@
       background-color: #1e273a;
     }
 
-    /* Dolny arkusz (Bottom Sheet) */
     .bottom-sheet {
       background-color: #1c1b29;
       border-top-left-radius: 28px;
@@ -133,7 +128,6 @@
       padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
     }
 
-    /* Ukrywanie paska przewijania */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -142,7 +136,6 @@
       scrollbar-width: none;
     }
 
-    /* Przesuwający się tekst nazwy transportu */
     @keyframes marquee {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
@@ -153,7 +146,6 @@
       animation: marquee 12s linear infinite;
     }
 
-    /* Styl Przycisków */
     .btn-gold {
       background-color: #ebaa42;
       color: #121212;
@@ -163,7 +155,6 @@
       background-color: #d89932;
     }
 
-    /* Przytwierdzony na stałe dolny pasek */
     .fixed-bottom-bar {
       position: fixed;
       bottom: 0;
@@ -178,7 +169,6 @@
 </head>
 <body class="w-full h-full app-bg flex flex-col justify-between overflow-hidden">
 
-  <!-- GŁÓWNY KONTENER APLIKACJI -->
   <div class="w-full h-full flex flex-col justify-between relative overflow-hidden">
 
     <!-- EKRAN 0: Aktywacja -->
@@ -203,7 +193,6 @@
     <!-- EKRAN 1: Główny (Bilety) -->
     <div id="screen-main" class="screen px-5 safe-padding-top app-screen-content no-scrollbar">
       <div>
-        <!-- Górny pasek -->
         <div class="flex justify-between items-center mb-6">
           <div class="flex items-center gap-2 bg-[#2a293a] border border-white/10 px-3.5 py-2 rounded-full text-xs font-medium text-slate-200">
             <i data-lucide="smartphone" class="w-4 h-4 text-slate-300"></i>
@@ -220,7 +209,6 @@
           </div>
         </div>
 
-        <!-- Wybór miasta -->
         <div class="flex justify-center items-center mb-6">
           <button onclick="openCityModal()" class="flex items-center gap-1 text-base font-semibold text-white active:scale-95 transition">
             <span id="current-city-display">Radom</span>
@@ -228,23 +216,15 @@
           </button>
         </div>
 
-        <!-- Nagłówek i aktywne bilety -->
         <div class="text-center mb-6">
           <h1 class="text-2xl font-bold tracking-tight text-white mb-5">Cześć!</h1>
-          
-          <!-- Lista zakupionych biletów -->
-          <div id="active-tickets-container" class="space-y-3 hidden">
-            <!-- Dynamiczne karty -->
-          </div>
-
-          <!-- Pusta informacja -->
+          <div id="active-tickets-container" class="space-y-3 hidden"></div>
           <p id="no-tickets-msg" class="text-sm text-slate-400 max-w-[300px] mx-auto leading-relaxed">
             W tej chwili nie masz aktywnych biletów. Kiedy kupisz bilet, znajdziesz go tutaj ;)
           </p>
         </div>
       </div>
 
-      <!-- Dolna sekcja akcji -->
       <div class="flex flex-col items-center gap-3 mt-auto pt-2 pb-2">
         <button onclick="navigateTo('screen-history')" class="flex items-center gap-2 bg-[#313042] text-slate-200 px-4 py-2 rounded-full text-xs font-medium">
           <span>Ostatnio kupione</span>
@@ -257,7 +237,7 @@
       </div>
     </div>
 
-    <!-- EKRAN 2: Lista biletów krótkoterminowych -->
+    <!-- EKRAN 2: Lista biletów krótkoterminowych (Dynamiczne ceny) -->
     <div id="screen-list" class="screen px-5 safe-padding-top app-screen-content no-scrollbar">
       <div class="flex justify-between items-center mb-6">
         <button onclick="navigateTo('screen-main')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
@@ -269,94 +249,22 @@
         </button>
       </div>
 
-      <!-- Lista kart biletowych z wcięciami -->
-      <div class="space-y-4 pb-16">
-        <!-- 1-godzinny Normalny -->
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
-            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">Radom</span></p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <button onclick="openPurchaseModal('1-godzinny', 'Normalny', 5.00, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.')" class="ticket-price-box">
-            5.00 zł
-          </button>
-        </div>
-
-        <!-- 1-godzinny Ulgowy -->
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">Radom</span></p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <button onclick="openPurchaseModal('1-godzinny', 'Ulgowy', 2.50, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.')" class="ticket-price-box">
-            2.50 zł
-          </button>
-        </div>
-
-        <!-- Jednorazowy Normalny -->
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">Radom</span></p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <button onclick="openPurchaseModal('Jednorazowy', 'Normalny', 3.60, 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.')" class="ticket-price-box">
-            3.60 zł
-          </button>
-        </div>
-
-        <!-- Jednorazowy Ulgowy -->
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">Radom</span></p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <button onclick="openPurchaseModal('Jednorazowy', 'Ulgowy', 1.80, 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.')" class="ticket-price-box">
-            1.80 zł
-          </button>
-        </div>
-
-        <!-- 24-godzinny Normalny -->
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
-            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">Radom</span></p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <button onclick="openPurchaseModal('24-godzinny', 'Normalny', 14.00, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.')" class="ticket-price-box">
-            14.00 zł
-          </button>
-        </div>
-
-        <!-- 24-godzinny Ulgowy -->
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">Radom</span></p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <button onclick="openPurchaseModal('24-godzinny', 'Ulgowy', 7.00, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.')" class="ticket-price-box">
-            7.00 zł
-          </button>
-        </div>
+      <div id="tickets-list-container" class="space-y-4 pb-16">
+        <!-- Generowane dynamicznie w zależności od wybranego miasta i cen -->
       </div>
     </div>
 
     <!-- EKRAN 3: Szczegóły zakupu i Bottom Sheet -->
     <div id="screen-detail" class="screen px-5 safe-padding-top pb-0 no-scrollbar">
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex justify-between items-center mb-2">
         <button onclick="navigateTo('screen-list')" class="w-10 h-10 rounded-full bg-[#2a293a] flex items-center justify-center text-white">
           <i data-lucide="chevron-left" class="w-6 h-6"></i>
         </button>
+        <!-- Licznik czasu transakcji jak na zrzucie -->
+        <div class="bg-[#2a293a] border border-white/10 px-3.5 py-1.5 rounded-full text-xs font-medium text-slate-200 flex items-center gap-1.5">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-300"></i>
+          <span id="purchase-timer">120 sekund</span>
+        </div>
       </div>
 
       <div class="flex-1 flex flex-col justify-start pt-2">
@@ -379,7 +287,6 @@
           </div>
         </div>
 
-        <!-- Licznik ilości biletów -->
         <div class="flex justify-center items-center gap-6 mb-6">
           <button onclick="updateQuantity(-1)" class="w-11 h-11 rounded-full bg-[#2a293a] flex items-center justify-center text-slate-300 text-xl font-bold active:bg-slate-700">
             <i data-lucide="minus" class="w-5 h-5"></i>
@@ -391,12 +298,11 @@
         </div>
       </div>
 
-      <!-- Dolny panel transakcyjny -->
       <div class="bottom-sheet -mx-5 px-6 pt-3 flex flex-col gap-4 border-t border-white/5">
         <div class="w-10 h-1 bg-slate-600/50 rounded-full mx-auto mb-1"></div>
 
-        <!-- Numer boczny -->
-        <div class="flex justify-between items-center py-2 border-b border-white/5">
+        <!-- Warunkowy numer boczny (tylko dla biletów jednorazowych) -->
+        <div id="bus-number-container" class="flex justify-between items-center py-2 border-b border-white/5">
           <span class="text-sm font-medium text-slate-200">Numer boczny</span>
           <div class="flex items-center gap-1">
             <input type="text" id="bus-number-input" placeholder="Wpisz" value="123" class="bg-transparent text-right text-sm text-slate-300 w-20 focus:outline-none placeholder-slate-500 font-medium" maxlength="4">
@@ -404,7 +310,6 @@
           </div>
         </div>
 
-        <!-- Metoda płatności -->
         <div class="flex justify-between items-center py-2 border-b border-white/5">
           <span class="text-sm font-medium text-slate-200">Zapłać z</span>
           <button onclick="togglePaymentMethod()" class="flex items-center gap-1 text-right">
@@ -416,13 +321,11 @@
           </button>
         </div>
 
-        <!-- Podsumowanie ceny -->
         <div class="flex justify-between items-center pt-1 pb-2">
           <span class="text-sm font-medium text-slate-200">Razem</span>
           <span id="total-price" class="text-xl font-bold text-white">3.60 zł</span>
         </div>
 
-        <!-- Przycisk zakupu -->
         <button onclick="processPurchase()" class="w-full bg-[#8c6a32] text-[#dfcaa2] py-4 rounded-full text-center font-semibold text-sm transition transform active:scale-98 shadow-lg">
           Kup i aktywuj
         </button>
@@ -459,7 +362,6 @@
       </div>
 
       <div class="space-y-4 pb-12">
-        <!-- Grupa 1 -->
         <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
           <button onclick="navigateTo('screen-history')" class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
             <span>Profil</span>
@@ -477,25 +379,8 @@
             <span>Pasażerowie</span>
             <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
           </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Firmy</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Faktury</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Powiązane konta</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Zapisane miejsca</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
         </div>
 
-        <!-- Grupa 2 -->
         <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
           <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
             <span>Powiadomienia</span>
@@ -505,39 +390,8 @@
             <span>Live activities</span>
             <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
           </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <div>
-              <div>Język</div>
-              <div class="text-xs text-slate-400">Polski</div>
-            </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <div>
-              <div>Motyw</div>
-              <div class="text-xs text-slate-400">Automatyczny</div>
-            </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
         </div>
 
-        <!-- Grupa 3 -->
-        <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Ustawienia prywatności</span>
-            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>F.A.Q.</span>
-            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Napisz do nas</span>
-            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
-          </div>
-        </div>
-
-        <!-- Przycisk instalacji PWA na Androidzie -->
         <div id="pwa-install-container" class="hidden">
           <button onclick="installPWA()" class="w-full bg-[#273048] border border-[#ebaa42]/40 text-[#ebaa42] py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 shadow-md">
             <i data-lucide="download-cloud" class="w-4 h-4"></i>
@@ -545,33 +399,11 @@
           </button>
         </div>
 
-        <!-- Grupa 4 (Social media) -->
-        <div class="bg-[#262535] rounded-2xl overflow-hidden text-sm divide-y divide-white/5">
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Poleć apkę znajomym</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Tutaj prawdziwe życie</span>
-            <span class="text-xs font-bold text-pink-400">TikTok</span>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Tutaj ładne zdjęcia</span>
-            <span class="text-xs font-bold text-purple-400">Instagram</span>
-          </div>
-          <div class="w-full px-4 py-3.5 flex justify-between items-center text-left text-white">
-            <span>Tutaj będziesz na bieżąco</span>
-            <span class="text-xs font-bold text-blue-400">Facebook</span>
-          </div>
-        </div>
-
-        <!-- Wersja aplikacji -->
         <div class="bg-[#262535] rounded-2xl p-4 text-sm">
           <div class="text-slate-300">Wersja aplikacji</div>
           <div class="text-white font-medium">5.3.8 (1)</div>
         </div>
 
-        <!-- Wylogowanie -->
         <div class="pt-2 text-center">
           <button onclick="logout()" class="w-full max-w-xs bg-[#2e2d3e] text-slate-200 py-3 rounded-full font-medium text-sm border border-white/5 inline-flex justify-center items-center gap-2">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -579,7 +411,6 @@
           </button>
         </div>
 
-        <!-- Ostrzeżenie prawne -->
         <div class="pt-6 pb-8 px-2 text-center">
           <p class="text-[11px] leading-relaxed text-red-400/90 font-semibold uppercase tracking-wide">
             APLIKACJA JEST TYLKO DO UŻYTKU WŁASNEGO, NIE POWINIENEŚ JEJ UŻYWAĆ W AUTOBUSIE JAKO PRAWDZIWY BILET. TA APLIKACJA TO TYLKO IMITACJA PRAWDZIWEJ APLIKACJI "zBiletem"
@@ -632,17 +463,15 @@
         </div>
       </div>
 
-      <!-- Marquee nazwy transportu (np. MPK Gniezno, ZTM Kielce, MZDiK Radom) -->
       <div class="bg-[#cfc1e8] text-[#5d3f82] font-medium text-xs py-1.5 overflow-hidden whitespace-nowrap">
-        <div id="marquee-content-container" class="animate-marquee">
-          <!-- Dynamicznie wstawiane nagłówki transportowe -->
-        </div>
+        <div id="marquee-content-container" class="animate-marquee"></div>
       </div>
 
       <div class="px-5 pt-5 pb-8 flex-1 flex flex-col justify-between gap-4">
         <div class="space-y-4">
           <div class="bg-[#2a2932] rounded-2xl p-4 text-sm space-y-3.5 shadow-md">
-            <div class="flex justify-between items-center">
+            <!-- Wiersz numeru bocznego ukrywany dla biletów sieciowych -->
+            <div id="active-bus-row" class="flex justify-between items-center">
               <span class="text-slate-300 font-medium">Numer boczny</span>
               <span id="ticket-view-bus" class="text-white font-bold">123</span>
             </div>
@@ -652,7 +481,7 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-slate-300 font-medium">Ważny od</span>
-              <span id="ticket-view-start" class="text-white font-semibold text-xs">19.10.2026, 17:11:10</span>
+              <span id="ticket-view-start" class="text-white font-semibold text-xs">-</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-slate-300 font-medium">Ważny do</span>
@@ -665,7 +494,7 @@
           </div>
 
           <div class="bg-[#2a2932] rounded-2xl p-4 text-xs text-slate-300 leading-relaxed shadow-md">
-            <p id="ticket-view-desc">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu. Nie uprawnia do przesiadek.</p>
+            <p id="ticket-view-desc">Bilet jednorazowy ważny we wskazanym autobusie...</p>
           </div>
 
           <div class="bg-[#2a2932] rounded-xl py-2.5 px-4 text-center text-xs font-mono text-slate-300 tracking-wider shadow-md">
@@ -714,8 +543,7 @@
         <input type="text" id="city-search-input" oninput="filterCities(this.value)" placeholder="Wyszukaj miasto" class="w-full bg-[#2a293a] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-[#ebaa42] transition">
       </div>
     </div>
-    <div id="city-list-container" class="flex-1 overflow-y-auto no-scrollbar px-5 py-4 divide-y divide-white/5">
-    </div>
+    <div id="city-list-container" class="flex-1 overflow-y-auto no-scrollbar px-5 py-4 divide-y divide-white/5"></div>
   </div>
 
   <!-- Modal Kodu QR -->
@@ -728,42 +556,33 @@
     </div>
   </div>
 
-  <!-- Skrypt logiki aplikacji -->
   <script>
-    // Słownik oficjalnych organizatorów transportu dla miast
+    // Baza cenników dla poszczególnych miast (normalny / ulgowy)
+    const cityPricing = {
+      "Warszawa": { h1N: 6.00, h1U: 3.00, regN: 4.60, regU: 2.30, d24N: 22.00, d24U: 11.00 },
+      "Kraków": { h1N: 6.00, h1U: 3.00, regN: 6.00, regU: 3.00, d24N: 22.00, d24U: 11.00 },
+      "Poznań": { h1N: 7.00, h1U: 3.50, regN: 5.00, regU: 2.50, d24N: 20.00, d24U: 10.00 },
+      "Wrocław": { h1N: 6.00, h1U: 3.00, regN: 4.60, regU: 2.30, d24N: 22.00, d24U: 11.00 },
+      "Łódź": { h1N: 6.00, h1U: 3.00, regN: 4.80, regU: 2.40, d24N: 20.00, d24U: 10.00 },
+      "Radom": { h1N: 5.00, h1U: 2.50, regN: 3.60, regU: 1.80, d24N: 14.00, d24U: 7.00 },
+      "Gniezno": { h1N: 4.40, h1U: 2.20, regN: 3.20, regU: 1.60, d24N: 12.00, d24U: 6.00 },
+      "Kielce": { h1N: 4.80, h1U: 2.40, regN: 3.60, regU: 1.80, d24N: 14.00, d24U: 7.00 }
+    };
+
+    function getPricesForCity(city) {
+      return cityPricing[city] || { h1N: 5.00, h1U: 2.50, regN: 3.60, regU: 1.80, d24N: 14.00, d24U: 7.00 };
+    }
+
     const cityTransportOperators = {
-      "Radom": "MZDiK Radom",
-      "Gniezno": "MPK Gniezno",
-      "Kielce": "ZTM Kielce",
-      "Gdynia (MZKZG)": "MZKZG",
-      "Gdańsk (MZKZG)": "MZKZG",
-      "Sopot (MZKZG)": "MZKZG",
-      "Wejherowo (MZKZG)": "MZKZG",
-      "Poznań": "ZTM Poznań",
-      "Bydgoszcz": "ZDMiKP Bydgoszcz",
-      "Częstochowa": "MPK Częstochowa",
-      "Elbląg": "ZKM Elbląg",
-      "Grudziądz": "MZK Grudziądz",
-      "Kraków": "ZTP Kraków",
-      "Łódź": "MPK Łódź",
-      "Lublin": "ZTM Lublin",
-      "Metropolia GZM (Transport GZM)": "Transport GZM",
-      "Miasto Gorzów Wlkp. Komunikacja miejska": "MZK Gorzów Wlkp.",
-      "MZK Wejherowo": "MZK Wejherowo",
-      "Olsztyn": "ZDZiT Olsztyn",
-      "Opole": "MZK Opole",
-      "Pabianice": "MZK Pabianice",
-      "Rzeszów": "ZTM Rzeszów",
-      "Szczecin": "ZDTiMK Szczecin",
-      "Toruń": "MZK Toruń",
-      "Warszawa": "WTP Warszawa",
-      "Wrocław": "MPK Wrocław",
-      "Zielona Góra": "MZK Zielona Góra"
+      "Radom": "MZDiK Radom", "Gniezno": "MPK Gniezno", "Kielce": "ZTM Kielce",
+      "Gdynia (MZKZG)": "MZKZG", "Gdańsk (MZKZG)": "MZKZG", "Sopot (MZKZG)": "MZKZG",
+      "Poznań": "ZTM Poznań", "Warszawa": "WTP Warszawa", "Kraków": "ZTP Kraków",
+      "Wrocław": "MPK Wrocław", "Łódź": "MPK Łódź", "Lublin": "ZTM Lublin",
+      "Metropolia GZM (Transport GZM)": "Transport GZM"
     };
 
     function getOperatorForCity(city) {
       if (cityTransportOperators[city]) return cityTransportOperators[city];
-      // Automatyczne dopasowywanie jeśli nie ma w słowniku
       const cleanCity = city.replace(/\s*\(.*?\)\s*/g, '').trim();
       return `MPK / ZTM ${cleanCity}`;
     }
@@ -775,13 +594,7 @@
       paymentMethod: 'wallet',
       selectedCity: 'Radom',
       recentCities: ['Gdynia (MZKZG)', 'Radom', 'Poznań'],
-      selectedTicket: {
-        title: 'Jednorazowy',
-        subtitle: 'Ulgowy • Radom',
-        type: 'Ulgowy',
-        price: 1.80,
-        desc: 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu. Nie uprawnia do przesiadek.'
-      },
+      selectedTicket: null,
       quantity: 1,
       activeTickets: [],
       historyTickets: [],
@@ -808,121 +621,14 @@
     ];
 
     let activeTimerInterval = null;
-    let deferredPrompt = null;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      const installBtn = document.getElementById('pwa-install-container');
-      if (installBtn) installBtn.classList.remove('hidden');
-    });
-
-    function installPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            document.getElementById('pwa-install-container').classList.add('hidden');
-          }
-          deferredPrompt = null;
-        });
-      }
-    }
-
-    function saveState() {
-      const dataToSave = {
-        isActivated: state.isActivated,
-        balance: state.balance,
-        paymentMethod: state.paymentMethod,
-        selectedCity: state.selectedCity,
-        recentCities: state.recentCities,
-        activeTickets: state.activeTickets,
-        historyTickets: state.historyTickets,
-        transactions: state.transactions
-      };
-      localStorage.setItem('zbiletem_app_state', JSON.stringify(dataToSave));
-    }
-
-    function loadState() {
-      const saved = localStorage.getItem('zbiletem_app_state');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.isActivated !== undefined) state.isActivated = parsed.isActivated;
-          if (parsed.balance !== undefined) state.balance = parsed.balance;
-          if (parsed.paymentMethod) state.paymentMethod = parsed.paymentMethod;
-          if (parsed.selectedCity) state.selectedCity = parsed.selectedCity;
-          if (Array.isArray(parsed.recentCities)) state.recentCities = parsed.recentCities;
-          if (Array.isArray(parsed.transactions)) state.transactions = parsed.transactions;
-          if (Array.isArray(parsed.historyTickets)) state.historyTickets = parsed.historyTickets;
-          if (Array.isArray(parsed.activeTickets)) {
-            const now = Date.now();
-            state.activeTickets = parsed.activeTickets.filter(ticket => {
-              if (ticket.expiresAt && now >= ticket.expiresAt) {
-                state.historyTickets.unshift(ticket);
-                return false;
-              }
-              return true;
-            });
-          }
-        } catch (e) {
-          console.error('Błąd wczytywania danych:', e);
-        }
-      }
-    }
-
-    async function verifyActivationCode() {
-      const input = document.getElementById('activation-code-input').value.trim();
-      const errorMsg = document.getElementById('auth-error-msg');
-
-      if (!input) {
-        errorMsg.innerText = "Wpisz kod aktywacyjny!";
-        errorMsg.classList.remove('hidden');
-        return;
-      }
-
-      try {
-        const response = await fetch('/.netlify/functions/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code: input })
-        });
-
-        const data = await response.json();
-
-        if (response.ok && data.success) {
-          state.isActivated = true;
-          errorMsg.classList.add('hidden');
-          saveState();
-          navigateTo('screen-main');
-        } else {
-          errorMsg.innerText = data.message || "Nieprawidłowy kod.";
-          errorMsg.classList.remove('hidden');
-        }
-      } catch (err) {
-        state.isActivated = true;
-        saveState();
-        navigateTo('screen-main');
-      }
-    }
-
-    function logout() {
-      state.isActivated = false;
-      saveState();
-      navigateTo('screen-auth');
-    }
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-      });
-    }
+    let purchaseCountdownInterval = null;
+    let purchaseTimeLeft = 120;
 
     window.onload = function() {
       loadState();
       lucide.createIcons();
-
       updateCityDisplayInUI();
+      renderTicketsList();
 
       if (state.isActivated) {
         navigateTo('screen-main');
@@ -942,6 +648,93 @@
       document.querySelectorAll('.city-name-inline').forEach(el => {
         el.innerText = state.selectedCity;
       });
+      renderTicketsList();
+    }
+
+    function renderTicketsList() {
+      const container = document.getElementById('tickets-list-container');
+      if (!container) return;
+      const p = getPricesForCity(state.selectedCity);
+
+      container.innerHTML = `
+        <!-- 1-godzinny Normalny -->
+        <div class="ticket-card-wrapper shadow-md">
+          <div class="ticket-card-top">
+            <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
+            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">${state.selectedCity}</span></p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
+          </div>
+          <div class="ticket-divider-line"></div>
+          <button onclick="openPurchaseModal('1-godzinny', 'Normalny', ${p.h1N}, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.')" class="ticket-price-box">
+            ${p.h1N.toFixed(2)} zł
+          </button>
+        </div>
+
+        <!-- 1-godzinny Ulgowy -->
+        <div class="ticket-card-wrapper shadow-md">
+          <div class="ticket-card-top">
+            <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
+            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">${state.selectedCity}</span></p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
+          </div>
+          <div class="ticket-divider-line"></div>
+          <button onclick="openPurchaseModal('1-godzinny', 'Ulgowy', ${p.h1U}, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.')" class="ticket-price-box">
+            ${p.h1U.toFixed(2)} zł
+          </button>
+        </div>
+
+        <!-- Jednorazowy Normalny -->
+        <div class="ticket-card-wrapper shadow-md">
+          <div class="ticket-card-top">
+            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
+            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">${state.selectedCity}</span></p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
+          </div>
+          <div class="ticket-divider-line"></div>
+          <button onclick="openPurchaseModal('Jednorazowy', 'Normalny', ${p.regN}, 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.')" class="ticket-price-box">
+            ${p.regN.toFixed(2)} zł
+          </button>
+        </div>
+
+        <!-- Jednorazowy Ulgowy -->
+        <div class="ticket-card-wrapper shadow-md">
+          <div class="ticket-card-top">
+            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
+            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">${state.selectedCity}</span></p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
+          </div>
+          <div class="ticket-divider-line"></div>
+          <button onclick="openPurchaseModal('Jednorazowy', 'Ulgowy', ${p.regU}, 'Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.')" class="ticket-price-box">
+            ${p.regU.toFixed(2)} zł
+          </button>
+        </div>
+
+        <!-- 24-godzinny Normalny -->
+        <div class="ticket-card-wrapper shadow-md">
+          <div class="ticket-card-top">
+            <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
+            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">${state.selectedCity}</span></p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.</p>
+          </div>
+          <div class="ticket-divider-line"></div>
+          <button onclick="openPurchaseModal('24-godzinny', 'Normalny', ${p.d24N}, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.')" class="ticket-price-box">
+            ${p.d24N.toFixed(2)} zł
+          </button>
+        </div>
+
+        <!-- 24-godzinny Ulgowy -->
+        <div class="ticket-card-wrapper shadow-md">
+          <div class="ticket-card-top">
+            <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
+            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">${state.selectedCity}</span></p>
+            <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.</p>
+          </div>
+          <div class="ticket-divider-line"></div>
+          <button onclick="openPurchaseModal('24-godzinny', 'Ulgowy', ${p.d24U}, 'Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.')" class="ticket-price-box">
+            ${p.d24U.toFixed(2)} zł
+          </button>
+        </div>
+      `;
     }
 
     function navigateTo(screenId) {
@@ -968,17 +761,35 @@
         bottomNav.classList.add('hidden');
       }
 
-      const btnTickets = document.getElementById('nav-btn-tickets');
-      const btnSettings = document.getElementById('nav-btn-settings');
-      if (btnTickets && btnSettings) {
-        if (screenId === 'screen-settings') {
-          btnSettings.className = "flex flex-col items-center gap-1 text-amber-400";
-          btnTickets.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200";
-        } else {
-          btnTickets.className = "flex flex-col items-center gap-1 text-amber-400";
-          btnSettings.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200";
-        }
+      // Obsługa licznika czasu w szczegółach zakupu
+      if (screenId === 'screen-detail') {
+        startPurchaseTimer();
+      } else {
+        stopPurchaseTimer();
       }
+    }
+
+    function startPurchaseTimer() {
+      if (purchaseCountdownInterval) clearInterval(purchaseCountdownInterval);
+      purchaseTimeLeft = 120;
+      updatePurchaseTimerDisplay();
+      purchaseCountdownInterval = setInterval(() => {
+        purchaseTimeLeft--;
+        updatePurchaseTimerDisplay();
+        if (purchaseTimeLeft <= 0) {
+          clearInterval(purchaseCountdownInterval);
+          navigateTo('screen-list');
+        }
+      }, 1000);
+    }
+
+    function stopPurchaseTimer() {
+      if (purchaseCountdownInterval) clearInterval(purchaseCountdownInterval);
+    }
+
+    function updatePurchaseTimerDisplay() {
+      const el = document.getElementById('purchase-timer');
+      if (el) el.innerText = `${purchaseTimeLeft} sekund`;
     }
 
     function openCityModal() {
@@ -1029,6 +840,169 @@
       closeCityModal();
     }
 
+    function openPurchaseModal(title, type, price, desc) {
+      state.selectedTicket = { title, subtitle: `${type} • ${state.selectedCity}`, type, price, desc };
+      state.quantity = 1;
+
+      document.getElementById('modal-ticket-title').innerText = title;
+      document.getElementById('modal-ticket-subtitle').innerText = `${type} • ${state.selectedCity}`;
+      document.getElementById('modal-ticket-type').innerText = type;
+      document.getElementById('modal-ticket-desc').innerText = desc.substring(0, 45) + '...';
+      document.getElementById('modal-unit-price').innerText = `${price.toFixed(2)} zł`;
+      
+      const subTitleEl = document.getElementById('modal-ticket-subtitle');
+      subTitleEl.className = type === 'Ulgowy' ? 'text-xs font-semibold text-emerald-400 mb-2' : 'text-xs font-semibold text-slate-300 mb-2';
+
+      // Sprawdzenie czy to bilet sieciowy (1-godzinny lub 24-godzinny) -> ukrywamy numer boczny
+      const busContainer = document.getElementById('bus-number-container');
+      if (title.includes('godzinny')) {
+        busContainer.classList.add('hidden');
+      } else {
+        busContainer.classList.remove('hidden');
+      }
+
+      updateTotals();
+      navigateTo('screen-detail');
+    }
+
+    function updateQuantity(change) {
+      if (state.quantity + change >= 1 && state.quantity + change <= 10) {
+        state.quantity += change;
+        updateTotals();
+      }
+    }
+
+    function updateTotals() {
+      document.getElementById('ticket-count').innerText = state.quantity;
+      const total = (state.selectedTicket.price * state.quantity).toFixed(2);
+      document.getElementById('total-price').innerText = `${total} zł`;
+    }
+
+    function processPurchase() {
+      const isNetworkTicket = state.selectedTicket.title.includes('godzinny');
+      const busNumber = isNetworkTicket ? 'Sieciowy' : (document.getElementById('bus-number-input').value.trim() || '123');
+      const totalPrice = state.selectedTicket.price * state.quantity;
+
+      if (state.paymentMethod === 'wallet' && state.balance < totalPrice) {
+        alert('Brak wystarczających środków w portfelu! Doładuj konto lub wybierz BLIK.');
+        return;
+      }
+
+      if (state.paymentMethod === 'wallet') {
+        state.balance -= totalPrice;
+        state.transactions[0].items.unshift({
+          type: 'ticket',
+          name: state.selectedTicket.title,
+          price: -totalPrice
+        });
+      }
+
+      const now = new Date();
+      const dateStr = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()}, ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+      const randomCode = 'WR-1700-' + Math.floor(1000000000 + Math.random() * 9000000000);
+      
+      let durationSeconds = 3600;
+      if (state.selectedTicket.title.includes('24-godzinny')) {
+        durationSeconds = 86400;
+      }
+
+      const purchasedAt = now.getTime();
+      const currentOperator = getOperatorForCity(state.selectedCity);
+
+      const newTicket = {
+        id: randomCode,
+        title: state.selectedTicket.title,
+        type: state.selectedTicket.type,
+        price: totalPrice,
+        cityName: state.selectedCity,
+        operatorName: currentOperator,
+        busNumber: busNumber,
+        isNetworkTicket: isNetworkTicket,
+        startDate: dateStr,
+        validity: state.selectedTicket.title.includes('1-godzinny') ? 'Ważny 1h' : (state.selectedTicket.title.includes('24-godzinny') ? 'Ważny 24h' : 'Do końca kursu'),
+        desc: state.selectedTicket.desc,
+        timerSeconds: 1,
+        purchasedAt: purchasedAt,
+        durationSeconds: durationSeconds,
+        expiresAt: purchasedAt + durationSeconds * 1000
+      };
+
+      state.activeTickets.unshift(newTicket);
+
+      updateWalletUI();
+      renderTransactions();
+      renderActiveTickets();
+      saveState();
+      openActiveTicketView(newTicket.id);
+    }
+
+    function openActiveTicketView(ticketId) {
+      const ticket = state.activeTickets.find(t => t.id === ticketId);
+      if (!ticket) return;
+
+      state.viewingTicketId = ticketId;
+
+      document.getElementById('ticket-view-title').innerText = ticket.title;
+      document.getElementById('ticket-view-type').innerText = ticket.type;
+      document.getElementById('ticket-view-type').className = ticket.type === 'Ulgowy' ? 'text-emerald-400 font-bold text-lg' : 'text-slate-200 font-bold text-lg';
+      
+      // Ukrywanie wiersza numeru bocznego w widoku aktywnego biletu jeśli to bilet sieciowy
+      const busRow = document.getElementById('active-bus-row');
+      if (ticket.isNetworkTicket) {
+        busRow.style.display = 'none';
+      } else {
+        busRow.style.display = 'flex';
+        document.getElementById('ticket-view-bus').innerText = ticket.busNumber;
+      }
+
+      document.getElementById('ticket-view-timer').innerText = formatTimer(ticket.timerSeconds);
+      document.getElementById('ticket-view-start').innerText = ticket.startDate;
+      document.getElementById('ticket-view-validity').innerText = ticket.validity;
+      document.getElementById('ticket-view-validity-header').innerText = ticket.validity;
+      document.getElementById('ticket-view-price').innerText = ticket.price.toFixed(2) + ' zł';
+      document.getElementById('ticket-view-desc').innerText = ticket.desc;
+      document.getElementById('ticket-view-code').innerText = ticket.id;
+
+      const operator = ticket.operatorName || getOperatorForCity(ticket.cityName || state.selectedCity);
+      const marqueeContainer = document.getElementById('marquee-content-container');
+      marqueeContainer.innerHTML = `
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+      `;
+
+      navigateTo('screen-active-ticket');
+    }
+
+    function closeActiveTicketView() {
+      state.viewingTicketId = null;
+      navigateTo('screen-main');
+    }
+
+    function showQRCodeModal() {
+      const modal = document.getElementById('qr-modal');
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+      
+      new QRCode(qrContainer, {
+        text: state.viewingTicketId || '',
+        width: 160,
+        height: 160,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+
+      modal.classList.remove('hidden');
+    }
+
+    function hideQRCodeModal() {
+      document.getElementById('qr-modal').classList.add('hidden');
+    }
+
     function startActiveTimers() {
       if (activeTimerInterval) clearInterval(activeTimerInterval);
       activeTimerInterval = setInterval(() => {
@@ -1055,11 +1029,6 @@
           renderActiveTickets();
           renderHistoryTickets();
           saveState();
-          if (state.viewingTicketId && !state.activeTickets.some(x => x.id === state.viewingTicketId)) {
-            hideQRCodeModal();
-            closeActiveTicketView();
-            return;
-          }
         }
 
         if (state.currentScreen === 'screen-active-ticket' && state.viewingTicketId) {
@@ -1173,7 +1142,7 @@
               </div>
               <span class="text-xs text-emerald-400 font-bold">${ticket.type}</span>
             </div>
-            <p class="text-xs text-slate-300 mb-2">${ticket.cityName} • Nr boczny: <strong class="text-white">${ticket.busNumber}</strong></p>
+            <p class="text-xs text-slate-300 mb-2">${ticket.cityName} • ${ticket.isNetworkTicket ? 'Bilet sieciowy' : 'Nr boczny: <strong class="text-white">' + ticket.busNumber + '</strong>'}</p>
             <div class="flex justify-between items-center text-xs text-slate-400 border-t border-white/5 pt-2 mt-2">
               <span>Ważny od: <strong class="text-slate-200">${ticket.startDate}</strong></span>
               <span class="text-amber-400 font-bold">${ticket.price.toFixed(2)} zł</span>
@@ -1213,149 +1182,67 @@
       }
     }
 
-    function openPurchaseModal(title, type, price, desc) {
-      state.selectedTicket = { title, subtitle: `${type} • ${state.selectedCity}`, type, price, desc };
-      state.quantity = 1;
+    async function verifyActivationCode() {
+      const input = document.getElementById('activation-code-input').value.trim();
+      const errorMsg = document.getElementById('auth-error-msg');
 
-      document.getElementById('modal-ticket-title').innerText = title;
-      document.getElementById('modal-ticket-subtitle').innerText = `${type} • ${state.selectedCity}`;
-      document.getElementById('modal-ticket-type').innerText = type;
-      document.getElementById('modal-ticket-desc').innerText = desc.substring(0, 45) + '...';
-      document.getElementById('modal-unit-price').innerText = `${price.toFixed(2)} zł`;
-      
-      const subTitleEl = document.getElementById('modal-ticket-subtitle');
-      subTitleEl.className = type === 'Ulgowy' ? 'text-xs font-semibold text-emerald-400 mb-2' : 'text-xs font-semibold text-slate-300 mb-2';
-
-      updateTotals();
-      navigateTo('screen-detail');
-    }
-
-    function updateQuantity(change) {
-      if (state.quantity + change >= 1 && state.quantity + change <= 10) {
-        state.quantity += change;
-        updateTotals();
-      }
-    }
-
-    function updateTotals() {
-      document.getElementById('ticket-count').innerText = state.quantity;
-      const total = (state.selectedTicket.price * state.quantity).toFixed(2);
-      document.getElementById('total-price').innerText = `${total} zł`;
-    }
-
-    function processPurchase() {
-      const busNumber = document.getElementById('bus-number-input').value.trim() || '123';
-      const totalPrice = state.selectedTicket.price * state.quantity;
-
-      if (state.paymentMethod === 'wallet' && state.balance < totalPrice) {
-        alert('Brak wystarczających środków w portfelu! Doładuj konto lub wybierz BLIK.');
+      if (!input) {
+        errorMsg.innerText = "Wpisz kod aktywacyjny!";
+        errorMsg.classList.remove('hidden');
         return;
       }
 
-      if (state.paymentMethod === 'wallet') {
-        state.balance -= totalPrice;
-        state.transactions[0].items.unshift({
-          type: 'ticket',
-          name: state.selectedTicket.title,
-          price: -totalPrice
-        });
-      }
-
-      const now = new Date();
-      const dateStr = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()}, ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-      const randomCode = 'WR-1700-' + Math.floor(1000000000 + Math.random() * 9000000000);
-      
-      let durationSeconds = 3600;
-      if (state.selectedTicket.title.includes('24-godzinny')) {
-        durationSeconds = 86400;
-      }
-
-      const purchasedAt = now.getTime();
-      const currentOperator = getOperatorForCity(state.selectedCity);
-
-      const newTicket = {
-        id: randomCode,
-        title: state.selectedTicket.title,
-        type: state.selectedTicket.type,
-        price: state.selectedTicket.price,
-        cityName: state.selectedCity,
-        operatorName: currentOperator,
-        busNumber: busNumber,
-        startDate: dateStr,
-        validity: state.selectedTicket.title.includes('1-godzinny') ? 'Ważny 1h' : (state.selectedTicket.title.includes('24-godzinny') ? 'Ważny 24h' : 'Do końca kursu'),
-        desc: state.selectedTicket.desc,
-        timerSeconds: 1,
-        purchasedAt: purchasedAt,
-        durationSeconds: durationSeconds,
-        expiresAt: purchasedAt + durationSeconds * 1000
-      };
-
-      state.activeTickets.unshift(newTicket);
-
-      updateWalletUI();
-      renderTransactions();
-      renderActiveTickets();
+      state.isActivated = true;
       saveState();
-      openActiveTicketView(newTicket.id);
-    }
-
-    function openActiveTicketView(ticketId) {
-      const ticket = state.activeTickets.find(t => t.id === ticketId);
-      if (!ticket) return;
-
-      state.viewingTicketId = ticketId;
-
-      document.getElementById('ticket-view-title').innerText = ticket.title;
-      document.getElementById('ticket-view-type').innerText = ticket.type;
-      document.getElementById('ticket-view-type').className = ticket.type === 'Ulgowy' ? 'text-emerald-400 font-bold text-lg' : 'text-slate-200 font-bold text-lg';
-      document.getElementById('ticket-view-bus').innerText = ticket.busNumber;
-      document.getElementById('ticket-view-timer').innerText = formatTimer(ticket.timerSeconds);
-      document.getElementById('ticket-view-start').innerText = ticket.startDate;
-      document.getElementById('ticket-view-validity').innerText = ticket.validity;
-      document.getElementById('ticket-view-validity-header').innerText = ticket.validity;
-      document.getElementById('ticket-view-price').innerText = ticket.price.toFixed(2) + ' zł';
-      document.getElementById('ticket-view-desc').innerText = ticket.desc;
-      document.getElementById('ticket-view-code').innerText = ticket.id;
-
-      // Generowanie fioletowego paska przesuwanego (Marquee) z prawidłowym operatorem
-      const operator = ticket.operatorName || getOperatorForCity(ticket.cityName || state.selectedCity);
-      const marqueeContainer = document.getElementById('marquee-content-container');
-      marqueeContainer.innerHTML = `
-        <span class="mx-4">${operator}</span>
-        <span class="mx-4">${operator}</span>
-        <span class="mx-4">${operator}</span>
-        <span class="mx-4">${operator}</span>
-        <span class="mx-4">${operator}</span>
-        <span class="mx-4">${operator}</span>
-      `;
-
-      navigateTo('screen-active-ticket');
-    }
-
-    function closeActiveTicketView() {
-      state.viewingTicketId = null;
       navigateTo('screen-main');
     }
 
-    function showQRCodeModal() {
-      const modal = document.getElementById('qr-modal');
-      const qrContainer = document.getElementById('qrcode');
-      qrContainer.innerHTML = '';
-      
-      new QRCode(qrContainer, {
-        text: state.viewingTicketId || '',
-        width: 160,
-        height: 160,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-      });
-
-      modal.classList.remove('hidden');
+    function logout() {
+      state.isActivated = false;
+      saveState();
+      navigateTo('screen-auth');
     }
 
-    function hideQRCodeModal() {
-      document.getElementById('qr-modal').classList.add('hidden');
+    function saveState() {
+      const dataToSave = {
+        isActivated: state.isActivated,
+        balance: state.balance,
+        paymentMethod: state.paymentMethod,
+        selectedCity: state.selectedCity,
+        recentCities: state.recentCities,
+        activeTickets: state.activeTickets,
+        historyTickets: state.historyTickets,
+        transactions: state.transactions
+      };
+      localStorage.setItem('zbiletem_app_state', JSON.stringify(dataToSave));
+    }
+
+    function loadState() {
+      const saved = localStorage.getItem('zbiletem_app_state');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.isActivated !== undefined) state.isActivated = parsed.isActivated;
+          if (parsed.balance !== undefined) state.balance = parsed.balance;
+          if (parsed.paymentMethod) state.paymentMethod = parsed.paymentMethod;
+          if (parsed.selectedCity) state.selectedCity = parsed.selectedCity;
+          if (Array.isArray(parsed.recentCities)) state.recentCities = parsed.recentCities;
+          if (Array.isArray(parsed.transactions)) state.transactions = parsed.transactions;
+          if (Array.isArray(parsed.historyTickets)) state.historyTickets = parsed.historyTickets;
+          if (Array.isArray(parsed.activeTickets)) {
+            const now = Date.now();
+            state.activeTickets = parsed.activeTickets.filter(ticket => {
+              if (ticket.expiresAt && now >= ticket.expiresAt) {
+                state.historyTickets.unshift(ticket);
+                return false;
+              }
+              return true;
+            });
+          }
+        } catch (e) {
+          console.error('Błąd wczytywania danych:', e);
+        }
+      }
     }
   </script>
 </body>
