@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="apple-touch-icon" href="/icon-192.png">
-  <title>zbiletem.pl - Radom</title>
+  <title>zbiletem.pl - Bilety</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts - Inter -->
@@ -142,7 +142,7 @@
       scrollbar-width: none;
     }
 
-    /* Przesuwający się tekst MZDiK Radom */
+    /* Przesuwający się tekst nazwy transportu */
     @keyframes marquee {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
@@ -275,7 +275,7 @@
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
-            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • Radom</p>
+            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">Radom</span></p>
             <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
           </div>
           <div class="ticket-divider-line"></div>
@@ -288,7 +288,7 @@
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">1-godzinny</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • Radom</p>
+            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">Radom</span></p>
             <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 1 godziny od momentu zakupu.</p>
           </div>
           <div class="ticket-divider-line"></div>
@@ -301,7 +301,7 @@
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • Radom</p>
+            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">Radom</span></p>
             <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
           </div>
           <div class="ticket-divider-line"></div>
@@ -314,7 +314,7 @@
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • Radom</p>
+            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">Radom</span></p>
             <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do końca kursu.</p>
           </div>
           <div class="ticket-divider-line"></div>
@@ -327,7 +327,7 @@
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
-            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • Radom</p>
+            <p class="text-xs text-slate-300 font-medium mb-2">Normalny • <span class="city-name-inline">Radom</span></p>
             <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.</p>
           </div>
           <div class="ticket-divider-line"></div>
@@ -340,7 +340,7 @@
         <div class="ticket-card-wrapper shadow-md">
           <div class="ticket-card-top">
             <h3 class="text-lg font-bold text-white mb-1">24-godzinny</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • Radom</p>
+            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • <span class="city-name-inline">Radom</span></p>
             <p class="text-xs text-slate-300 leading-relaxed">Bilet sieciowy, na wszystkie linie. Ważny w ciągu 24 godzin od momentu zakupu.</p>
           </div>
           <div class="ticket-divider-line"></div>
@@ -610,32 +610,6 @@
             <span>Wygasł 19 października</span>
           </div>
         </div>
-
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • MZDiK Radom</p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do koń...</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <div class="bg-[#383747] p-3 text-xs text-slate-300 flex items-center gap-2">
-            <i data-lucide="hourglass" class="w-4 h-4 text-slate-400"></i>
-            <span>Wygasł 4 września</span>
-          </div>
-        </div>
-
-        <div class="ticket-card-wrapper shadow-md">
-          <div class="ticket-card-top">
-            <h3 class="text-lg font-bold text-white mb-1">Jednorazowy</h3>
-            <p class="text-xs text-emerald-400 font-medium mb-2">Ulgowy • MZDiK Radom</p>
-            <p class="text-xs text-slate-300 leading-relaxed">Bilet jednorazowy ważny we wskazanym autobusie od momentu zakupu do koń...</p>
-          </div>
-          <div class="ticket-divider-line"></div>
-          <div class="bg-[#383747] p-3 text-xs text-slate-300 flex items-center gap-2">
-            <i data-lucide="hourglass" class="w-4 h-4 text-slate-400"></i>
-            <span>Wygasł 3 września</span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -658,15 +632,10 @@
         </div>
       </div>
 
-      <!-- Marquee MZDiK Radom -->
+      <!-- Marquee nazwy transportu (np. MPK Gniezno, ZTM Kielce, MZDiK Radom) -->
       <div class="bg-[#cfc1e8] text-[#5d3f82] font-medium text-xs py-1.5 overflow-hidden whitespace-nowrap">
-        <div class="animate-marquee">
-          <span class="mx-4">MZDiK Radom</span>
-          <span class="mx-4">MZDiK Radom</span>
-          <span class="mx-4">MZDiK Radom</span>
-          <span class="mx-4">MZDiK Radom</span>
-          <span class="mx-4">MZDiK Radom</span>
-          <span class="mx-4">MZDiK Radom</span>
+        <div id="marquee-content-container" class="animate-marquee">
+          <!-- Dynamicznie wstawiane nagłówki transportowe -->
         </div>
       </div>
 
@@ -733,7 +702,6 @@
 
   <!-- MODAL: Wybierz miasto -->
   <div id="city-modal" class="fixed inset-0 bg-[#151422] z-50 flex flex-col hidden">
-    <!-- Nagłówek modalu -->
     <div class="px-5 safe-padding-top pb-4 flex flex-col gap-3 border-b border-white/10 bg-[#1c1b29]">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-bold text-white">Wybierz miasto</h2>
@@ -741,15 +709,12 @@
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-      <!-- Wyszukiwarka miast -->
       <div class="relative">
         <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
         <input type="text" id="city-search-input" oninput="filterCities(this.value)" placeholder="Wyszukaj miasto" class="w-full bg-[#2a293a] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-[#ebaa42] transition">
       </div>
     </div>
-    <!-- Lista miast -->
     <div id="city-list-container" class="flex-1 overflow-y-auto no-scrollbar px-5 py-4 divide-y divide-white/5">
-      <!-- Generowane dynamicznie przez JavaScript -->
     </div>
   </div>
 
@@ -765,13 +730,51 @@
 
   <!-- Skrypt logiki aplikacji -->
   <script>
+    // Słownik oficjalnych organizatorów transportu dla miast
+    const cityTransportOperators = {
+      "Radom": "MZDiK Radom",
+      "Gniezno": "MPK Gniezno",
+      "Kielce": "ZTM Kielce",
+      "Gdynia (MZKZG)": "MZKZG",
+      "Gdańsk (MZKZG)": "MZKZG",
+      "Sopot (MZKZG)": "MZKZG",
+      "Wejherowo (MZKZG)": "MZKZG",
+      "Poznań": "ZTM Poznań",
+      "Bydgoszcz": "ZDMiKP Bydgoszcz",
+      "Częstochowa": "MPK Częstochowa",
+      "Elbląg": "ZKM Elbląg",
+      "Grudziądz": "MZK Grudziądz",
+      "Kraków": "ZTP Kraków",
+      "Łódź": "MPK Łódź",
+      "Lublin": "ZTM Lublin",
+      "Metropolia GZM (Transport GZM)": "Transport GZM",
+      "Miasto Gorzów Wlkp. Komunikacja miejska": "MZK Gorzów Wlkp.",
+      "MZK Wejherowo": "MZK Wejherowo",
+      "Olsztyn": "ZDZiT Olsztyn",
+      "Opole": "MZK Opole",
+      "Pabianice": "MZK Pabianice",
+      "Rzeszów": "ZTM Rzeszów",
+      "Szczecin": "ZDTiMK Szczecin",
+      "Toruń": "MZK Toruń",
+      "Warszawa": "WTP Warszawa",
+      "Wrocław": "MPK Wrocław",
+      "Zielona Góra": "MZK Zielona Góra"
+    };
+
+    function getOperatorForCity(city) {
+      if (cityTransportOperators[city]) return cityTransportOperators[city];
+      // Automatyczne dopasowywanie jeśli nie ma w słowniku
+      const cleanCity = city.replace(/\s*\(.*?\)\s*/g, '').trim();
+      return `MPK / ZTM ${cleanCity}`;
+    }
+
     const state = {
       isActivated: false,
       currentScreen: 'screen-auth',
       balance: 20.00,
       paymentMethod: 'wallet',
       selectedCity: 'Radom',
-      recentCities: ['Gdynia (MZKZG)', 'Radom', 'Poznań'], // Miasta z ikoną historii z Twojego zrzutu[cite: 10]
+      recentCities: ['Gdynia (MZKZG)', 'Radom', 'Poznań'],
       selectedTicket: {
         title: 'Jednorazowy',
         subtitle: 'Ulgowy • Radom',
@@ -919,7 +922,7 @@
       loadState();
       lucide.createIcons();
 
-      document.getElementById('current-city-display').innerText = state.selectedCity;
+      updateCityDisplayInUI();
 
       if (state.isActivated) {
         navigateTo('screen-main');
@@ -933,6 +936,13 @@
       renderHistoryTickets();
       startActiveTimers();
     };
+
+    function updateCityDisplayInUI() {
+      document.getElementById('current-city-display').innerText = state.selectedCity;
+      document.querySelectorAll('.city-name-inline').forEach(el => {
+        el.innerText = state.selectedCity;
+      });
+    }
 
     function navigateTo(screenId) {
       if (!state.isActivated && screenId !== 'screen-auth') {
@@ -971,7 +981,6 @@
       }
     }
 
-    // Obsługa modalu wyboru miasta
     function openCityModal() {
       renderCityList(allCities);
       document.getElementById('city-modal').classList.remove('hidden');
@@ -1008,13 +1017,11 @@
 
     function selectCity(city) {
       state.selectedCity = city;
-      document.getElementById('current-city-display').innerText = city;
+      updateCityDisplayInUI();
 
-      // Dodaj do historii wyboru miast na początek listy
       if (!state.recentCities.includes(city)) {
         state.recentCities.unshift(city);
       } else {
-        // Przesuń na sam początek
         state.recentCities = [city, ...state.recentCities.filter(c => c !== city)];
       }
 
@@ -1166,7 +1173,7 @@
               </div>
               <span class="text-xs text-emerald-400 font-bold">${ticket.type}</span>
             </div>
-            <p class="text-xs text-slate-300 mb-2">${state.selectedCity} • Nr boczny: <strong class="text-white">${ticket.busNumber}</strong></p>
+            <p class="text-xs text-slate-300 mb-2">${ticket.cityName} • Nr boczny: <strong class="text-white">${ticket.busNumber}</strong></p>
             <div class="flex justify-between items-center text-xs text-slate-400 border-t border-white/5 pt-2 mt-2">
               <span>Ważny od: <strong class="text-slate-200">${ticket.startDate}</strong></span>
               <span class="text-amber-400 font-bold">${ticket.price.toFixed(2)} zł</span>
@@ -1191,7 +1198,7 @@
           card.innerHTML = `
             <div class="ticket-card-top">
               <h3 class="text-lg font-bold text-white mb-1">${ticket.title}</h3>
-              <p class="text-xs text-emerald-400 font-medium mb-2">${ticket.type} • MZDiK ${state.selectedCity}</p>
+              <p class="text-xs text-emerald-400 font-medium mb-2">${ticket.type} • ${ticket.operatorName || ticket.cityName}</p>
               <p class="text-xs text-slate-300 leading-relaxed">${ticket.desc.substring(0, 60)}...</p>
             </div>
             <div class="ticket-divider-line"></div>
@@ -1264,12 +1271,15 @@
       }
 
       const purchasedAt = now.getTime();
+      const currentOperator = getOperatorForCity(state.selectedCity);
 
       const newTicket = {
         id: randomCode,
         title: state.selectedTicket.title,
         type: state.selectedTicket.type,
         price: state.selectedTicket.price,
+        cityName: state.selectedCity,
+        operatorName: currentOperator,
         busNumber: busNumber,
         startDate: dateStr,
         validity: state.selectedTicket.title.includes('1-godzinny') ? 'Ważny 1h' : (state.selectedTicket.title.includes('24-godzinny') ? 'Ważny 24h' : 'Do końca kursu'),
@@ -1306,6 +1316,18 @@
       document.getElementById('ticket-view-price').innerText = ticket.price.toFixed(2) + ' zł';
       document.getElementById('ticket-view-desc').innerText = ticket.desc;
       document.getElementById('ticket-view-code').innerText = ticket.id;
+
+      // Generowanie fioletowego paska przesuwanego (Marquee) z prawidłowym operatorem
+      const operator = ticket.operatorName || getOperatorForCity(ticket.cityName || state.selectedCity);
+      const marqueeContainer = document.getElementById('marquee-content-container');
+      marqueeContainer.innerHTML = `
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+        <span class="mx-4">${operator}</span>
+      `;
 
       navigateTo('screen-active-ticket');
     }
